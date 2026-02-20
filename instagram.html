@@ -1,0 +1,550 @@
+<!-- instagram.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram - Virtual Glow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(219, 112, 147, 0.1);
+        }
+        
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+        
+        .nav-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .nav-logo span {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #db7093, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #db7093, #ff69b4);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #db7093;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a.active {
+            color: #db7093;
+            font-weight: 700;
+        }
+        
+        .hero-section {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(219, 112, 147, 0.1) 0%, rgba(255, 182, 193, 0.1) 100%);
+        }
+        
+        .hero-section h1 {
+            font-size: 3rem;
+            color: #db7093;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .hero-section p {
+            font-size: 1.3rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #db7093;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #db7093, #ff69b4);
+            border-radius: 2px;
+        }
+        
+        .packs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .pack-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        .pack-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(135deg, #db7093, #ff69b4);
+        }
+        
+        .pack-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(219, 112, 147, 0.2);
+            border-color: rgba(219, 112, 147, 0.3);
+        }
+        
+        .pack-card.featured {
+            border: 3px solid #db7093;
+            transform: scale(1.05);
+        }
+        
+        .pack-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+        
+        .pack-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: linear-gradient(135deg, #db7093, #ff69b4);
+            color: white;
+            padding: 0.5rem 3rem;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .pack-name {
+            font-size: 1.8rem;
+            color: #db7093;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .pack-subtitle {
+            color: #888;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .pack-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pack-features li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #555;
+        }
+        
+        .pack-features li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            color: #db7093;
+        }
+        
+        .pack-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .pack-content {
+            font-weight: 700;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .pack-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #db7093;
+        }
+        
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #db7093, #ff69b4);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.4);
+        }
+        
+        .extras-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 4rem;
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.1);
+            border: 2px dashed #db7093;
+        }
+        
+        .extras-title {
+            font-size: 1.8rem;
+            color: #db7093;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .extras-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            list-style: none;
+        }
+        
+        .extras-list li {
+            padding: 1rem;
+            background: rgba(219, 112, 147, 0.05);
+            border-radius: 10px;
+            padding-left: 2.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .extras-list li:hover {
+            background: rgba(219, 112, 147, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .extras-list li::before {
+            content: '➕';
+            position: absolute;
+            left: 1rem;
+            color: #db7093;
+        }
+        
+        .testimonials {
+            margin-top: 6rem;
+            text-align: center;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.1);
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: '"';
+            font-size: 6rem;
+            color: rgba(219, 112, 147, 0.2);
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-family: Georgia, serif;
+        }
+        
+        .testimonial-text {
+            font-size: 1.2rem;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .testimonial-author {
+            font-weight: 700;
+            color: #db7093;
+            font-size: 1.1rem;
+        }
+        
+        .cta-section {
+            margin-top: 6rem;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(219, 112, 147, 0.1) 0%, rgba(255, 182, 193, 0.1) 100%);
+            border-radius: 20px;
+        }
+        
+        .cta-section h2 {
+            font-size: 2rem;
+            color: #db7093;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .btn-large {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #db7093, #ff69b4);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3);
+        }
+        
+        .btn-large:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(219, 112, 147, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #888;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(219, 112, 147, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-section h1 {
+                font-size: 2rem;
+                flex-direction: column;
+            }
+            
+            .packs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pack-card.featured {
+                transform: scale(1);
+            }
+            
+            .pack-card.featured:hover {
+                transform: scale(1) translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="nav-logo">
+                <img src="logod.jpg" alt="Virtual Glow">
+                <span>Virtual Glow</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="instagram.html" class="active">Instagram</a>
+                <a href="tiktok.html">TikTok</a>
+                <a href="business.html">Business</a>
+            </div>
+        </nav>
+    </header>
+    
+    <section class="hero-section">
+        <h1>📸 Instagram</h1>
+        <p>Packs diseñados para elevar tu Instagram al nivel que tu marca merece. Tú grabas lo tuyo, yo lo convierto en Glow ✨</p>
+    </section>
+    
+    <div class="container">
+        <h2 class="section-title">Elige tu Pack</h2>
+        
+        <div class="packs-grid">
+            <div class="pack-card">
+                <h3 class="pack-name">Glow Mini</h3>
+                <p class="pack-subtitle">Perfecto para iniciar y mantener tu IG bonito y activo.</p>
+                <ul class="pack-features">
+                    <li>Organización visual del feed para que se vea más profesional</li>
+                    <li>Publicaciones y programación de contenido en redes sociales que representan tu esencia</li>
+                    <li>Monitoreo de qué funciona / qué no funciona en la cuenta</li>
+                    <li>Diseño de posts y stories (imagen + texto)</li>
+                    <li>POVs, captions, hooks y textos personalizados para publicaciones</li>
+                </ul>
+                <div class="pack-footer">
+                    <span class="pack-content">Contenido semanal: 3 piezas por semana</span>
+                </div>
+                <div class="pack-price">$250</div>
+                <a href="#" class="btn-primary">Comprar</a>
+            </div>
+            
+            <div class="pack-card">
+                <h3 class="pack-name">Glow Plus</h3>
+                <p class="pack-subtitle">Más contenido, más presencia estética y más construcción del feed</p>
+                <ul class="pack-features">
+                    <li>Incluye todo lo del Glow Mini</li>
+                    <li>Creación de Flyer's, menús, anuncios y promociones estéticas para IG</li>
+                    <li>Diseño de guías, PDFs o material visual para productos/servicios</li>
+                    <li>Brainstorming mensual de ideas de contenido</li>
+                    <li>Creación básica de documentos/inventarios/listas/precios</li>
+                </ul>
+                <div class="pack-footer">
+                    <span class="pack-content">Contenido semanal: 4-5 piezas por semana</span>
+                </div>
+                <div class="pack-price">$475</div>
+                <a href="#" class="btn-primary">Comprar</a>
+            </div>
+            
+            <div class="pack-card featured">
+                <div class="pack-badge">Popular</div>
+                <h3 class="pack-name">Glow Full</h3>
+                <p class="pack-subtitle">Este es el paquete estrella</p>
+                <ul class="pack-features">
+                    <li>Si no tienes sitio web, lo creo para ti</li>
+                    <li>Edición de un reel profesional usando tus clips</li>
+                    <li>Respuesta de mensajes y comentarios básicos</li>
+                    <li>Plantillas pre-hechas en Canva para que uses siempre</li>
+                    <li>Campañas: sorteos, colaboraciones y estrategias de crecimiento</li>
+                    <li>Reporte mensual de métricas y crecimiento</li>
+                </ul>
+                <div class="pack-footer">
+                    <span class="pack-content">Contenido semanal: 6-7 piezas por semana</span>
+                </div>
+                <div class="pack-price">$800</div>
+                <a href="#" class="btn-primary">Comprar</a>
+            </div>
+        </div>
+        
+        <div class="extras-section">
+            <h3 class="extras-title">🎁 Extras Disponibles</h3>
+            <ul class="extras-list">
+                <li>Creación de una mini web para tus productos o servicios</li>
+                <li>Ideas de promociones mensuales</li>
+                <li>Packs de stories diarias (5-10 por semana)</li>
+                <li>Edición de reels extra</li>
+                <li>Ideas listas para grabar (10 ideas adaptadas al negocio)</li>
+                <li>Fotos editadas de productos</li>
+            </ul>
+        </div>
+        
+        <section class="testimonials">
+            <h2 class="section-title">Lo que dicen nuestras marcas Glow</h2>
+            <div class="testimonial-card">
+                <p class="testimonial-text">El Glow Plus me hizo subir ventas. Belleza + estrategia.</p>
+                <p class="testimonial-author">- Louisville, KY</p>
+            </div>
+        </section>
+        
+        <section class="cta-section">
+            <h2>✨ ¿List@ para Glow-up tu Instagram?</h2>
+            <p>Envíame un mensaje para empezar ♡</p>
+            <a href="#" class="btn-large">Empezar ahora</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Virtual Glow. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
