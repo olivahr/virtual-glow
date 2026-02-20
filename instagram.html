@@ -3,548 +3,883 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram - Virtual Glow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Instagram Services | Virtual Glow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #db7093;
+            --primary-dark: #c71585;
+            --secondary: #ffb6c1;
+            --accent: #ff69b4;
+            --dark: #1a1a2e;
+            --light: #fff5f7;
+            --white: #ffffff;
+            --gradient-1: linear-gradient(135deg, #db7093 0%, #ff69b4 50%, #ffb6c1 100%);
+            --gradient-2: linear-gradient(45deg, #ff69b4, #db7093);
+            --shadow-soft: 0 20px 60px rgba(219, 112, 147, 0.15);
+            --shadow-strong: 0 30px 80px rgba(219, 112, 147, 0.25);
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+
+        /* Loader */
+        .loader {
             position: fixed;
-            width: 100%;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(219, 112, 147, 0.1);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s;
         }
-        
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Navigation */
         .nav {
-            max-width: 1200px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            background: rgba(255, 245, 247, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            border-bottom: 1px solid rgba(219, 112, 147, 0.1);
+        }
+
+        .nav.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .nav-logo {
             display: flex;
             align-items: center;
             gap: 1rem;
             text-decoration: none;
         }
-        
+
         .nav-logo img {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             object-fit: cover;
+            box-shadow: 0 4px 15px rgba(219, 112, 147, 0.3);
         }
-        
+
         .nav-logo span {
-            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #db7093, #ff69b4);
+            background: var(--gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 3rem;
+            list-style: none;
         }
-        
+
         .nav-links a {
             text-decoration: none;
-            color: #666;
+            color: var(--dark);
             font-weight: 500;
-            transition: color 0.3s;
             position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
         }
-        
+
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(135deg, #db7093, #ff69b4);
+            background: var(--gradient-2);
             transition: width 0.3s;
         }
-        
-        .nav-links a:hover {
-            color: #db7093;
-        }
-        
-        .nav-links a:hover::after {
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
             width: 100%;
         }
-        
+
+        .nav-links a:hover,
         .nav-links a.active {
-            color: #db7093;
-            font-weight: 700;
+            color: var(--primary);
         }
-        
-        .hero-section {
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-toggle span {
+            width: 28px;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Hero */
+        .hero {
             margin-top: 80px;
-            padding: 4rem 2rem;
+            padding: 6rem 5% 4rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(219, 112, 147, 0.1) 0%, rgba(255, 182, 193, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(219, 112, 147, 0.05) 0%, rgba(255, 182, 193, 0.05) 100%);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .hero-section h1 {
-            font-size: 3rem;
-            color: #db7093;
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient-1);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--dark);
             margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
         }
-        
-        .hero-section p {
-            font-size: 1.3rem;
+
+        .hero h1 span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
             color: #666;
             max-width: 600px;
             margin: 0 auto;
         }
-        
-        .container {
-            max-width: 1200px;
+
+        /* Section */
+        .section {
+            padding: 5rem 5%;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 4rem 2rem;
         }
-        
-        .section-title {
+
+        .section-header {
             text-align: center;
-            font-size: 2.5rem;
-            color: #db7093;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(135deg, #db7093, #ff69b4);
-            border-radius: 2px;
-        }
-        
-        .packs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
             margin-bottom: 4rem;
         }
-        
-        .pack-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            border: 2px solid transparent;
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(219, 112, 147, 0.1);
+            color: var(--primary);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
         }
-        
-        .pack-card::before {
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Pricing Cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .pricing-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(135deg, #db7093, #ff69b4);
+            height: 4px;
+            background: var(--gradient-1);
         }
-        
-        .pack-card:hover {
+
+        .pricing-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(219, 112, 147, 0.2);
-            border-color: rgba(219, 112, 147, 0.3);
+            box-shadow: var(--shadow-strong);
+            border-color: rgba(219, 112, 147, 0.2);
         }
-        
-        .pack-card.featured {
-            border: 3px solid #db7093;
+
+        .pricing-card.featured {
+            border: 3px solid var(--primary);
             transform: scale(1.05);
+            box-shadow: 0 30px 80px rgba(219, 112, 147, 0.3);
         }
-        
-        .pack-card.featured:hover {
+
+        .pricing-card.featured:hover {
             transform: scale(1.05) translateY(-10px);
         }
-        
-        .pack-badge {
+
+        .popular-badge {
             position: absolute;
             top: 20px;
-            right: -35px;
-            background: linear-gradient(135deg, #db7093, #ff69b4);
+            right: -40px;
+            background: var(--gradient-1);
             color: white;
             padding: 0.5rem 3rem;
             transform: rotate(45deg);
             font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
-        .pack-name {
+
+        .pricing-header {
+            margin-bottom: 2rem;
+        }
+
+        .pricing-name {
+            font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            color: #db7093;
+            color: var(--primary);
             margin-bottom: 0.5rem;
-            font-weight: 700;
         }
-        
-        .pack-subtitle {
+
+        .pricing-desc {
             color: #888;
-            font-style: italic;
-            margin-bottom: 1.5rem;
             font-size: 0.95rem;
+            font-style: italic;
         }
-        
-        .pack-features {
+
+        .pricing-features {
             list-style: none;
             margin-bottom: 2rem;
         }
-        
-        .pack-features li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
+
+        .pricing-features li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
             position: relative;
             color: #555;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.95rem;
         }
-        
-        .pack-features li::before {
-            content: '✨';
+
+        .pricing-features li::before {
+            content: '✦';
             position: absolute;
             left: 0;
-            color: #db7093;
+            color: var(--primary);
+            font-size: 1.2rem;
         }
-        
-        .pack-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1.5rem;
+
+        .pricing-footer {
+            text-align: center;
             padding-top: 1.5rem;
-            border-top: 1px solid #eee;
+            border-top: 2px solid rgba(219, 112, 147, 0.1);
         }
-        
-        .pack-content {
+
+        .pricing-content {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .pricing-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
             font-weight: 700;
-            color: #333;
-            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
         }
-        
-        .pack-price {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #db7093;
+
+        .pricing-price span {
+            font-size: 1rem;
+            color: #888;
+            font-weight: 400;
         }
-        
+
         .btn-primary {
             display: block;
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #db7093, #ff69b4);
+            background: var(--gradient-1);
             color: white;
             text-align: center;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            margin-top: 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
-            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
         .btn-primary:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(219, 112, 147, 0.4);
         }
-        
-        .extras-section {
-            background: white;
-            border-radius: 20px;
+
+        /* Extras Section */
+        .extras-card {
+            background: var(--white);
+            border-radius: 24px;
             padding: 3rem;
-            margin-top: 4rem;
-            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.1);
-            border: 2px dashed #db7093;
+            box-shadow: var(--shadow-soft);
+            border: 2px dashed rgba(219, 112, 147, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .extras-card::before {
+            content: '🎁';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 10rem;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+        }
+
         .extras-title {
+            font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            color: #db7093;
-            margin-bottom: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
-        .extras-list {
+
+        .extras-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1rem;
-            list-style: none;
         }
-        
-        .extras-list li {
-            padding: 1rem;
+
+        .extra-item {
+            padding: 1.2rem;
             background: rgba(219, 112, 147, 0.05);
-            border-radius: 10px;
-            padding-left: 2.5rem;
+            border-radius: 12px;
+            padding-left: 3rem;
             position: relative;
             transition: all 0.3s;
+            border: 1px solid transparent;
         }
-        
-        .extras-list li:hover {
+
+        .extra-item:hover {
             background: rgba(219, 112, 147, 0.1);
             transform: translateX(5px);
+            border-color: rgba(219, 112, 147, 0.2);
         }
-        
-        .extras-list li::before {
+
+        .extra-item::before {
             content: '➕';
             position: absolute;
             left: 1rem;
-            color: #db7093;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2rem;
         }
-        
-        .testimonials {
-            margin-top: 6rem;
-            text-align: center;
+
+        /* Testimonial */
+        .testimonial-section {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, rgba(219, 112, 147, 0.05) 0%, rgba(255, 182, 193, 0.05) 100%);
         }
-        
+
         .testimonial-card {
-            background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.1);
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
             position: relative;
         }
-        
+
         .testimonial-card::before {
             content: '"';
-            font-size: 6rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
             color: rgba(219, 112, 147, 0.2);
             position: absolute;
             top: -20px;
-            left: 20px;
-            font-family: Georgia, serif;
+            left: 30px;
+            line-height: 1;
         }
-        
+
         .testimonial-text {
-            font-size: 1.2rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
             color: #555;
             font-style: italic;
-            margin-bottom: 1.5rem;
             line-height: 1.8;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
-        
+
         .testimonial-author {
-            font-weight: 700;
-            color: #db7093;
+            font-weight: 600;
+            color: var(--primary);
             font-size: 1.1rem;
         }
-        
-        .cta-section {
-            margin-top: 6rem;
-            text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, rgba(219, 112, 147, 0.1) 0%, rgba(255, 182, 193, 0.1) 100%);
-            border-radius: 20px;
+
+        .testimonial-location {
+            color: #888;
+            font-size: 0.9rem;
         }
-        
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 5%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .cta-section h2 {
-            font-size: 2rem;
-            color: #db7093;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
             margin-bottom: 1rem;
         }
-        
+
         .cta-section p {
             color: #666;
+            font-size: 1.2rem;
             margin-bottom: 2rem;
-            font-size: 1.1rem;
         }
-        
+
         .btn-large {
             display: inline-block;
             padding: 1.2rem 3rem;
-            background: linear-gradient(135deg, #db7093, #ff69b4);
+            background: var(--gradient-1);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3);
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.4);
         }
-        
+
         .btn-large:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(219, 112, 147, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(219, 112, 147, 0.5);
         }
-        
+
+        /* Footer */
         footer {
             text-align: center;
-            padding: 3rem 2rem;
+            padding: 3rem 5%;
             color: #888;
-            margin-top: 4rem;
             border-top: 1px solid rgba(219, 112, 147, 0.2);
+            font-size: 0.9rem;
         }
-        
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero-section h1 {
-                font-size: 2rem;
-                flex-direction: column;
-            }
-            
-            .packs-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .pack-card.featured {
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .pricing-card.featured {
                 transform: scale(1);
             }
             
-            .pack-card.featured:hover {
-                transform: scale(1) translateY(-10px);
+            .pricing-card.featured:hover {
+                transform: translateY(-10px);
             }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 400px;
+                height: 100vh;
+                background: var(--glass);
+                backdrop-filter: blur(30px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2.5rem;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+                list-style: none;
+                display: flex;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.3rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .extras-card {
+                padding: 2rem;
+            }
+
+            .testimonial-card {
+                padding: 2rem;
+            }
+
+            .testimonial-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 5rem 5% 3rem;
+            }
+
+            .pricing-card {
+                padding: 1.5rem;
+            }
+
+            .pricing-price {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 3rem 5%;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-transition {
+            animation: pageLoad 0.6s ease;
+        }
+
+        @keyframes pageLoad {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>
-    <header class="header">
-        <nav class="nav">
+<body class="page-transition">
+    <div class="loader" id="loader">
+        <img src="logod.jpg" alt="Loading" class="loader-logo">
+    </div>
+
+    <nav class="nav" id="nav">
+        <div class="nav-container">
             <a href="index.html" class="nav-logo">
                 <img src="logod.jpg" alt="Virtual Glow">
                 <span>Virtual Glow</span>
             </a>
-            <div class="nav-links">
-                <a href="index.html">Inicio</a>
-                <a href="instagram.html" class="active">Instagram</a>
-                <a href="tiktok.html">TikTok</a>
-                <a href="business.html">Business</a>
-            </div>
-        </nav>
-    </header>
-    
-    <section class="hero-section">
-        <h1>📸 Instagram</h1>
-        <p>Packs diseñados para elevar tu Instagram al nivel que tu marca merece. Tú grabas lo tuyo, yo lo convierto en Glow ✨</p>
-    </section>
-    
-    <div class="container">
-        <h2 class="section-title">Elige tu Pack</h2>
-        
-        <div class="packs-grid">
-            <div class="pack-card">
-                <h3 class="pack-name">Glow Mini</h3>
-                <p class="pack-subtitle">Perfecto para iniciar y mantener tu IG bonito y activo.</p>
-                <ul class="pack-features">
-                    <li>Organización visual del feed para que se vea más profesional</li>
-                    <li>Publicaciones y programación de contenido en redes sociales que representan tu esencia</li>
-                    <li>Monitoreo de qué funciona / qué no funciona en la cuenta</li>
-                    <li>Diseño de posts y stories (imagen + texto)</li>
-                    <li>POVs, captions, hooks y textos personalizados para publicaciones</li>
-                </ul>
-                <div class="pack-footer">
-                    <span class="pack-content">Contenido semanal: 3 piezas por semana</span>
-                </div>
-                <div class="pack-price">$250</div>
-                <a href="#" class="btn-primary">Comprar</a>
-            </div>
             
-            <div class="pack-card">
-                <h3 class="pack-name">Glow Plus</h3>
-                <p class="pack-subtitle">Más contenido, más presencia estética y más construcción del feed</p>
-                <ul class="pack-features">
-                    <li>Incluye todo lo del Glow Mini</li>
-                    <li>Creación de Flyer's, menús, anuncios y promociones estéticas para IG</li>
-                    <li>Diseño de guías, PDFs o material visual para productos/servicios</li>
-                    <li>Brainstorming mensual de ideas de contenido</li>
-                    <li>Creación básica de documentos/inventarios/listas/precios</li>
-                </ul>
-                <div class="pack-footer">
-                    <span class="pack-content">Contenido semanal: 4-5 piezas por semana</span>
-                </div>
-                <div class="pack-price">$475</div>
-                <a href="#" class="btn-primary">Comprar</a>
-            </div>
-            
-            <div class="pack-card featured">
-                <div class="pack-badge">Popular</div>
-                <h3 class="pack-name">Glow Full</h3>
-                <p class="pack-subtitle">Este es el paquete estrella</p>
-                <ul class="pack-features">
-                    <li>Si no tienes sitio web, lo creo para ti</li>
-                    <li>Edición de un reel profesional usando tus clips</li>
-                    <li>Respuesta de mensajes y comentarios básicos</li>
-                    <li>Plantillas pre-hechas en Canva para que uses siempre</li>
-                    <li>Campañas: sorteos, colaboraciones y estrategias de crecimiento</li>
-                    <li>Reporte mensual de métricas y crecimiento</li>
-                </ul>
-                <div class="pack-footer">
-                    <span class="pack-content">Contenido semanal: 6-7 piezas por semana</span>
-                </div>
-                <div class="pack-price">$800</div>
-                <a href="#" class="btn-primary">Comprar</a>
-            </div>
-        </div>
-        
-        <div class="extras-section">
-            <h3 class="extras-title">🎁 Extras Disponibles</h3>
-            <ul class="extras-list">
-                <li>Creación de una mini web para tus productos o servicios</li>
-                <li>Ideas de promociones mensuales</li>
-                <li>Packs de stories diarias (5-10 por semana)</li>
-                <li>Edición de reels extra</li>
-                <li>Ideas listas para grabar (10 ideas adaptadas al negocio)</li>
-                <li>Fotos editadas de productos</li>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="instagram.html" class="active">Instagram</a></li>
+                <li><a href="tiktok.html">TikTok</a></li>
+                <li><a href="business.html">Business</a></li>
             </ul>
-        </div>
-        
-        <section class="testimonials">
-            <h2 class="section-title">Lo que dicen nuestras marcas Glow</h2>
-            <div class="testimonial-card">
-                <p class="testimonial-text">El Glow Plus me hizo subir ventas. Belleza + estrategia.</p>
-                <p class="testimonial-author">- Louisville, KY</p>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-        </section>
-        
-        <section class="cta-section">
-            <h2>✨ ¿List@ para Glow-up tu Instagram?</h2>
-            <p>Envíame un mensaje para empezar ♡</p>
-            <a href="#" class="btn-large">Empezar ahora</a>
-        </section>
-    </div>
-    
+        </div>
+    </nav>
+
+    <section class="hero">
+        <span class="hero-badge">📸 Instagram Services</span>
+        <h1>Elevamos tu <span>Instagram</span></h1>
+        <p>Packs diseñados para llevar tu marca al siguiente nivel. Tú grabas lo tuyo, nosotros lo convertimos en Glow.</p>
+    </section>
+
+    <section class="section">
+        <div class="section-header fade-in">
+            <span class="section-tag">Pricing</span>
+            <h2 class="section-title">Elige tu Pack</h2>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card fade-in">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Glow Mini</h3>
+                    <p class="pricing-desc">Perfecto para iniciar y mantener tu IG bonito y activo</p>
+                </div>
+                <ul class="pricing-features">
+                    <li>Organización visual del feed profesional</li>
+                    <li>Publicaciones y programación de contenido</li>
+                    <li>Monitoreo de métricas y rendimiento</li>
+                    <li>Diseño de posts y stories (imagen + texto)</li>
+                    <li>POVs, captions y hooks personalizados</li>
+                </ul>
+                <div class="pricing-footer">
+                    <p class="pricing-content">3 piezas de contenido semanal</p>
+                    <div class="pricing-price">$250<span>/mes</span></div>
+                    <a href="#" class="btn-primary">Comenzar Ahora</a>
+                </div>
+            </div>
+
+            <div class="pricing-card fade-in">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Glow Plus</h3>
+                    <p class="pricing-desc">Más contenido, más presencia estética</p>
+                </div>
+                <ul class="pricing-features">
+                    <li>Todo lo incluido en Glow Mini</li>
+                    <li>Creación de flyers, menús y promociones</li>
+                    <li>Diseño de guías y PDFs visuales</li>
+                    <li>Brainstorming mensual de ideas</li>
+                    <li>Documentos e inventarios profesionales</li>
+                </ul>
+                <div class="pricing-footer">
+                    <p class="pricing-content">4-5 piezas de contenido semanal</p>
+                    <div class="pricing-price">$475<span>/mes</span></div>
+                    <a href="#" class="btn-primary">Comenzar Ahora</a>
+                </div>
+            </div>
+
+            <div class="pricing-card featured fade-in">
+                <div class="popular-badge">Popular</div>
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Glow Full</h3>
+                    <p class="pricing-desc">El paquete estrella completo</p>
+                </div>
+                <ul class="pricing-features">
+                    <li>Todo lo incluido en Glow Plus</li>
+                    <li>Creación de sitio web si no tienes</li>
+                    <li>Edición de reel profesional mensual</li>
+                    <li>Respuesta a mensajes y comentarios</li>
+                    <li>Plantillas Canva pre-diseñadas</li>
+                    <li>Campañas de sorteos y colaboraciones</li>
+                    <li>Reporte mensual de métricas</li>
+                </ul>
+                <div class="pricing-footer">
+                    <p class="pricing-content">6-7 piezas de contenido semanal</p>
+                    <div class="pricing-price">$800<span>/mes</span></div>
+                    <a href="#" class="btn-primary">Comenzar Ahora</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="extras-card fade-in">
+            <h3 class="extras-title">🎁 Extras Disponibles</h3>
+            <div class="extras-grid">
+                <div class="extra-item">Creación de mini web para productos</div>
+                <div class="extra-item">Ideas de promociones mensuales</div>
+                <div class="extra-item">Packs de stories diarias (5-10/semana)</div>
+                <div class="extra-item">Edición de reels extra</div>
+                <div class="extra-item">10 ideas listas para grabar</div>
+                <div class="extra-item">Fotos editadas de productos</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonial-section">
+        <div class="testimonial-card fade-in">
+            <p class="testimonial-text">"El Glow Plus me hizo subir ventas. Belleza + estrategia."</p>
+            <p class="testimonial-author">María González</p>
+            <p class="testimonial-location">Louisville, KY</p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-bg"></div>
+        <div class="cta-content">
+            <h2>¿Lista para tu Glow Up?</h2>
+            <p>Envíanos un mensaje y comienza tu transformación digital hoy.</p>
+            <a href="#" class="btn-large">Empezar Ahora ✨</a>
+        </div>
+    </section>
+
     <footer>
         <p>&copy; 2025 Virtual Glow. Todos los derechos reservados.</p>
     </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 600);
+        });
+
+        // Nav scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
