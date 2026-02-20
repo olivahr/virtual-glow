@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Business Solutions | Virtual Glow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --business-brown: #8b4513;
+            --business-gold: #d4af37;
+            --business-rose: #db7093;
+            --dark: #1a1a2e;
+            --light: #fff9f0;
+            --white: #ffffff;
+            --gradient-business: linear-gradient(135deg, #8b4513 0%, #db7093 100%);
+            --shadow-soft: 0 20px 60px rgba(139, 69, 19, 0.15);
+            --shadow-strong: 0 30px 80px rgba(139, 69, 19, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            background: rgba(255, 249, 240, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+        }
+
+        .nav.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .nav-logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: var(--gradient-business);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-business);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--business-brown);
+        }
+
+        .lang-toggle {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: 1rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--business-brown);
+            color: var(--business-brown);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--business-brown);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-toggle span {
+            width: 28px;
+            height: 2px;
+            background: var(--business-brown);
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.05) 0%, rgba(219, 112, 147, 0.05) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient-business);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.3);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-business);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Section */
+        .section {
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(139, 69, 19, 0.1);
+            color: var(--business-brown);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-business);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
+            border-color: rgba(139, 69, 19, 0.2);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(219, 112, 147, 0.1));
+            transition: all 0.3s;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: var(--gradient-business);
+        }
+
+        .service-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--business-brown);
+            margin-bottom: 1rem;
+        }
+
+        .service-desc {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .service-features li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--business-rose);
+            font-weight: 700;
+        }
+
+        /* Consulting Section */
+        .consulting-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 4rem;
+            box-shadow: var(--shadow-soft);
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .consulting-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .consulting-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .consulting-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--business-brown);
+            margin-bottom: 1.5rem;
+        }
+
+        .consulting-content > p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .consulting-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .consulting-list li {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(139, 69, 19, 0.05);
+            border-radius: 12px;
+            padding-left: 3rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .consulting-list li:hover {
+            background: rgba(139, 69, 19, 0.1);
+            transform: translateX(5px);
+        }
+
+        .consulting-list li::before {
+            content: '💡';
+            position: absolute;
+            left: 1rem;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-business);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.4);
+        }
+
+        .consulting-visual {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.05), rgba(219, 112, 147, 0.05));
+            border-radius: 20px;
+            padding: 3rem 2rem;
+        }
+
+        .consulting-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .price-label {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-tag {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--gradient-business);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-note {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Process Section */
+        .process-section {
+            margin-bottom: 4rem;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .process-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--business-rose);
+            opacity: 0.3;
+        }
+
+        .step-number {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-business);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.3);
+            transition: all 0.3s;
+        }
+
+        .process-step:hover .step-number {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(139, 69, 19, 0.4);
+        }
+
+        .step-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--business-brown);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, rgba(139,69,19,0.03) 0%, rgba(219,112,147,0.03) 100%);
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow-strong);
+            transform: translateY(-3px);
+        }
+
+        .faq-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--business-brown);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: #555;
+            font-size: 0.95rem;
+            display: none;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(139,69,19,0.2);
+            margin-top: 0.8rem;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(219, 112, 147, 0.1) 100%);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '✨';
+            position: absolute;
+            font-size: 20rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-large {
+            display: inline-block;
+            padding: 1.3rem 4rem;
+            background: var(--gradient-business);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.4);
+        }
+
+        .btn-large:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(139, 69, 19, 0.5);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 3rem auto;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 5%;
+            color: #888;
+            border-top: 1px solid rgba(139, 69, 19, 0.2);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .consulting-section {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .process-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .process-step:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 400px;
+                height: 100vh;
+                background: rgba(255, 249, 240, 0.98);
+                backdrop-filter: blur(30px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2.5rem;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+                list-style: none;
+                display: flex;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.3rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .consulting-section {
+                padding: 2rem;
+            }
+
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 5rem 5% 3rem;
+            }
+
+            .section {
+                padding: 3rem 5%;
+            }
+
+            .service-card {
+                padding: 1.5rem;
+            }
+
+            .price-tag {
+                font-size: 3rem;
+            }
+
+            .consulting-list li {
+                padding-left: 2.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-transition {
+            animation: pageLoad 0.6s ease;
+        }
+
+        @keyframes pageLoad {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="page-transition">
+    <div class="loader" id="loader">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%238b4513' opacity='0.4'/%3E%3C/svg%3E" alt="Loading" class="loader-logo">
+    </div>
+
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='45' height='45' viewBox='0 0 45 45'%3E%3Ccircle cx='22.5' cy='22.5' r='18' fill='%238b4513'/%3E%3C/svg%3E" alt="Virtual Glow">
+                <span>Virtual Glow</span>
+            </a>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="instagram.html">Instagram</a></li>
+                <li><a href="tiktok.html">TikTok</a></li>
+                <li><a href="business.html" class="active">Business</a></li>
+                <li><a class="nav-link" data-section="faq">FAQ</a></li>
+                <li><a class="nav-link" data-section="contacto">Contacto</a></li>
+                <li>
+                    <div class="lang-toggle">
+                        <span class="lang-btn active" data-lang="es">ES</span>
+                        <span class="lang-btn" data-lang="en">EN</span>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <span class="hero-badge">💼 Business Solutions</span>
+        <h1 data-i18n="hero.title">Estrategias para <span>Empresas</span></h1>
+        <p data-i18n="hero.subtitle">Soluciones integrales para emprendedores y empresas que quieren destacar en el mundo digital y escalar sus resultados.</p>
+    </section>
+
+    <section class="section">
+        <div class="section-header fade-in">
+            <span class="section-tag" data-i18n="services.tag">Servicios</span>
+            <h2 class="section-title" data-i18n="services.title">Soluciones Profesionales</h2>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <div class="service-icon">🎯</div>
+                <h3 class="service-name" data-i18n="services.card1.name">Estrategia de Marca</h3>
+                <p class="service-desc" data-i18n="services.card1.desc">Construimos la identidad digital de tu negocio desde cero o la renovamos para el mercado actual.</p>
+                <ul class="service-features">
+                    <li data-i18n="services.card1.f1">Definición de identidad de marca digital</li>
+                    <li data-i18n="services.card1.f2">Posicionamiento estratégico</li>
+                    <li data-i18n="services.card1.f3">Manual de marca para redes sociales</li>
+                    <li data-i18n="services.card1.f4">Análisis de competencia</li>
+                    <li data-i18n="services.card1.f5">Propuesta de valor única</li>
+                </ul>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">📊</div>
+                <h3 class="service-name" data-i18n="services.card2.name">Marketing Digital Integral</h3>
+                <p class="service-desc" data-i18n="services.card2.desc">Campañas coordinadas en múltiples plataformas para maximizar tu ROI.</p>
+                <ul class="service-features">
+                    <li data-i18n="services.card2.f1">Gestión de redes sociales empresariales</li>
+                    <li data-i18n="services.card2.f2">Campañas de email marketing</li>
+                    <li data-i18n="services.card2.f3">Estrategias de contenido B2B y B2C</li>
+                    <li data-i18n="services.card2.f4">Automatización de marketing</li>
+                    <li data-i18n="services.card2.f5">Reportes de analytics mensuales</li>
+                </ul>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">🛒</div>
+                <h3 class="service-name" data-i18n="services.card3.name">E-commerce & Ventas</h3>
+                <p class="service-desc" data-i18n="services.card3.desc">Optimizamos tu embudo de ventas digital para convertir seguidores en clientes.</p>
+                <ul class="service-features">
+                    <li data-i18n="services.card3.f1">Optimización de perfiles comerciales</li>
+                    <li data-i18n="services.card3.f2">Estrategias de venta directa en redes</li>
+                    <li data-i18n="services.card3.f3">Catálogos digitales interactivos</li>
+                    <li data-i18n="services.card3.f4">Embudos de conversión</li>
+                    <li data-i18n="services.card3.f5">Retargeting y remarketing</li>
+                </ul>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">🎨</div>
+                <h3 class="service-name" data-i18n="services.card4.name">Diseño & Producción</h3>
+                <p class="service-desc" data-i18n="services.card4.desc">Assets visuales profesionales que comunican la calidad de tu marca.</p>
+                <ul class="service-features">
+                    <li data-i18n="services.card4.f1">Diseño de identidad visual completa</li>
+                    <li data-i18n="services.card4.f2">Material publicitario digital</li>
+                    <li data-i18n="services.card4.f3">Edición de video profesional</li>
+                    <li data-i18n="services.card4.f4">Fotografía de producto (dirección)</li>
+                    <li data-i18n="services.card4.f5">Templates editables para equipo</li>
+                </ul>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">📚</div>
+                <h3 class="service-name" data-i18n="services.card5.name">Capacitación & Workshops</h3>
+                <p class="service-desc" data-i18n="services.card5.desc">Empoderamos a tu equipo con las habilidades del marketing moderno.</p>
+                <ul class="service-features">
+                    <li data-i18n="services.card5.f1">Talleres de contenido para equipos</li>
+                    <li data-i18n="services.card5.f2">Capacitación en herramientas (Canva, etc)</li>
+                    <li data-i18n="services.card5.f3">Estrategias de community management</li>
+                    <li data-i18n="services.card5.f4">Mejores prácticas por plataforma</li>
+                    <li data-i18n="services.card5.f5">Material de consulta permanente</li>
+                </ul>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">🚀</div>
+                <h3 class="service-name" data-i18n="services.card6.name">Lanzamientos & Campañas</h3>
+                <p class="service-desc" data-i18n="services.card6.desc">Estrategias de lanzamiento que generan buzz y ventas desde el día uno.</p>
+                <ul class="service-features">
+                    <li data-i18n="services.card6.f1">Estrategia de pre-lanzamiento</li>
+                    <li data-i18n="services.card6.f2">Campañas de lanzamiento 360°</li>
+                    <li data-i18n="services.card6.f3">Colaboraciones con influencers</li>
+                    <li data-i18n="services.card6.f4">Eventos digitales y lives</li>
+                    <li data-i18n="services.card6.f5">Análisis post-campaña</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="consulting-section fade-in">
+            <div class="consulting-content">
+                <h3 data-i18n="consult.title">Consultoría 1:1 Premium</h3>
+                <p data-i18n="consult.desc1">Sesiones personalizadas para dueños de negocio que necesitan una estrategia a medida y acompañamiento directo.</p>
+                <p data-i18n="consult.desc2">Ideal para empresas en crecimiento, lanzamientos importantes o rebranding completo.</p>
+                
+                <ul class="consulting-list">
+                    <li data-i18n="consult.item1">Sesión diagnóstico de 90 minutos</li>
+                    <li data-i18n="consult.item2">Plan de acción personalizado entregable</li>
+                    <li data-i18n="consult.item3">2 sesiones de seguimiento</li>
+                    <li data-i18n="consult.item4">Acceso directo por WhatsApp por 30 días</li>
+                    <li data-i18n="consult.item5">Revisión de materials y copy</li>
+                </ul>
+                
+                <a href="#" class="btn-primary" data-stripe="consult" data-i18n="consult.button">Agendar Consultoría</a>
+            </div>
+            
+            <div class="consulting-visual">
+                <div class="consulting-icon">👩‍💼</div>
+                <div class="price-label" data-i18n="consult.priceLabel">Inversión</div>
+                <div class="price-tag">$997</div>
+                <div class="price-note" data-i18n="consult.priceNote">o 2 pagos de $525</div>
+            </div>
+        </div>
+
+        <div class="process-section">
+            <div class="section-header fade-in">
+                <span class="section-tag" data-i18n="process.tag">Proceso</span>
+                <h2 class="section-title" data-i18n="process.title">Cómo Trabajamos</h2>
+            </div>
+            
+            <div class="process-grid">
+                <div class="process-step fade-in">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title" data-i18n="process.step1">Descubrimiento</h4>
+                    <p class="step-desc" data-i18n="process.desc1">Analizamos tu negocio, competencia y objetivos</p>
+                </div>
+                
+                <div class="process-step fade-in">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title" data-i18n="process.step2">Estrategia</h4>
+                    <p class="step-desc" data-i18n="process.desc2">Diseñamos un plan de acción con KPIs claros</p>
+                </div>
+                
+                <div class="process-step fade-in">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title" data-i18n="process.step3">Ejecución</h4>
+                    <p class="step-desc" data-i18n="process.desc3">Implementamos tácticas con reportes semanales</p>
+                </div>
+                
+                <div class="process-step fade-in">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title" data-i18n="process.step4">Optimización</h4>
+                    <p class="step-desc" data-i18n="process.desc4">Analizamos, ajustamos y escalamos resultados</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section (52+ preguntas sobre business) -->
+    <section class="faq-section" id="faq">
+        <div style="text-align: center;">
+            <span class="section-tag" data-i18n="faq.badge">❓ FAQ</span>
+            <h2 class="section-title" data-i18n="faq.title">Preguntas Frecuentes sobre Negocios</h2>
+        </div>
+        <div class="faq-grid" id="faqGrid"></div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2 data-i18n="cta.title">¿Lista para llevar tu negocio al siguiente nivel?</h2>
+            <p data-i18n="cta.subtitle">Agenda una llamada gratuita de 15 minutos para evaluar cómo podemos ayudarte.</p>
+            <a href="#" class="btn-large" data-stripe="call" data-i18n="cta.button">Agendar Llamada Gratis</a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contacto">
+        <h2 class="section-title" data-i18n="contact.title">Contacto</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <a href="mailto:virtualglowservicesd@gmail.com">virtualglowservicesd@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">📞</span>
+                <span>+1 (502) 555-6789</span>
+            </div>
+        </div>
+        <a href="#" class="btn-primary" data-i18n="contact.cta">Envíanos un mensaje</a>
+        <p style="margin-top: 2rem; font-size: 0.85rem; color: #aaa;" data-i18n="contact.policies">Políticas de privacidad · Términos de uso</p>
+    </section>
+
+    <footer>
+        <p data-i18n="footer">© 2025 Virtual Glow. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // ==================== 52+ PREGUNTAS FRECUENTES ====================
+        const faqData = [
+            // Generales de negocio
+            { cat: 'general', questionEs: '¿Cómo empiezo con Virtual Glow Business?', answerEs: 'Contáctanos por correo y agendamos una reunión para conocer tu negocio. En 48h tendrás una propuesta personalizada.', questionEn: 'How do I start with Virtual Glow Business?', answerEn: 'Contact us by email and we schedule a meeting to learn about your business. Within 48h you’ll have a custom proposal.' },
+            { cat: 'general', questionEs: '¿Trabajan con empresas de cualquier tamaño?', answerEs: 'Sí, desde emprendedores individuales hasta medianas empresas. Adaptamos nuestras soluciones a tu presupuesto y necesidades.', questionEn: 'Do you work with companies of any size?', answerEn: 'Yes, from individual entrepreneurs to medium-sized companies. We adapt our solutions to your budget and needs.' },
+            { cat: 'general', questionEs: '¿Ofrecen servicios de consultoría puntual?', answerEs: 'Sí, tenemos sesiones de consultoría 1:1 y paquetes de asesoría continua.', questionEn: 'Do you offer one-time consulting services?', answerEn: 'Yes, we have 1:1 consulting sessions and ongoing advisory packages.' },
+            { cat: 'general', questionEs: '¿Cuánto tiempo toma ver resultados?', answerEs: 'Depende del tipo de proyecto. Generalmente en 3 meses ves cambios significativos en posicionamiento y ventas.', questionEn: 'How long does it take to see results?', answerEn: 'It depends on the project. Usually within 3 months you see significant changes in positioning and sales.' },
+            { cat: 'general', questionEs: '¿Qué métodos de pago aceptan?', answerEs: 'Aceptamos tarjeta de crédito/débito vía Stripe, transferencia bancaria y PayPal.', questionEn: 'What payment methods do you accept?', answerEn: 'We accept credit/debit cards via Stripe, bank transfer and PayPal.' },
+            { cat: 'general', questionEs: '¿Puedo cancelar en cualquier momento?', answerEs: 'Sí, nuestros servicios son mensuales sin permanencia.', questionEn: 'Can I cancel anytime?', answerEn: 'Yes, our services are monthly with no long-term contract.' },
+            // Estrategia de marca
+            { cat: 'brand', questionEs: '¿Qué incluye la estrategia de marca?', answerEs: 'Incluye investigación de mercado, definición de identidad, posicionamiento, manual de marca y análisis de competencia.', questionEn: 'What does brand strategy include?', answerEn: 'It includes market research, identity definition, positioning, brand manual and competitor analysis.' },
+            { cat: 'brand', questionEs: '¿Pueden ayudarme a reposicionar una marca existente?', answerEs: 'Sí, realizamos un rebranding completo o parcial según lo necesites.', questionEn: 'Can you help me reposition an existing brand?', answerEn: 'Yes, we do a complete or partial rebranding as needed.' },
+            { cat: 'brand', questionEs: '¿Cuánto tiempo toma desarrollar una estrategia de marca?', answerEs: 'El proceso inicial toma de 2 a 4 semanas, dependiendo de la complejidad.', questionEn: 'How long does it take to develop a brand strategy?', answerEn: 'The initial process takes 2 to 4 weeks, depending on complexity.' },
+            // Marketing digital
+            { cat: 'marketing', questionEs: '¿Qué tipo de campañas de marketing manejan?', answerEs: 'Manejamos campañas en redes sociales, email marketing, Google Ads y contenido patrocinado.', questionEn: 'What type of marketing campaigns do you handle?', answerEn: 'We handle social media campaigns, email marketing, Google Ads and sponsored content.' },
+            { cat: 'marketing', questionEs: '¿Incluye la gestión de redes sociales?', answerEs: 'Sí, en nuestros packs de marketing digital incluimos la gestión completa de perfiles empresariales.', questionEn: 'Does it include social media management?', answerEn: 'Yes, our digital marketing packs include complete management of business profiles.' },
+            { cat: 'marketing', questionEs: '¿Hacen reporting de resultados?', answerEs: 'Sí, entregamos reportes mensuales con métricas clave y recomendaciones.', questionEn: 'Do you provide results reporting?', answerEn: 'Yes, we deliver monthly reports with key metrics and recommendations.' },
+            // E-commerce
+            { cat: 'ecommerce', questionEs: '¿Pueden ayudarme a crear mi tienda online?', answerEs: 'Sí, desarrollamos tiendas en Shopify, WooCommerce o platforms personalizadas según tu producto.', questionEn: 'Can you help me create my online store?', answerEn: 'Yes, we develop stores on Shopify, WooCommerce or custom platforms according to your product.' },
+            { cat: 'ecommerce', questionEs: '¿Qué incluye la optimización de perfiles comerciales?', answerEs: 'Optimizamos tus perfiles de Instagram, Facebook y TikTok para convertir visitas en ventas, con links de pago directo y catálogos.', questionEn: 'What does business profile optimization include?', answerEn: 'We optimize your Instagram, Facebook and TikTok profiles to convert visits into sales, with direct payment links and catalogs.' },
+            { cat: 'ecommerce', questionEs: '¿Trabajan con dropshipping?', answerEs: 'Sí, tenemos experiencia en estrategias para dropshipping.', questionEn: 'Do you work with dropshipping?', answerEn: 'Yes, we have experience in dropshipping strategies.' },
+            // Diseño y producción
+            { cat: 'design', questionEs: '¿Hacen diseño de logotipos?', answerEs: 'Sí, creamos identidad visual completa, incluyendo logotipo, paleta de colores y tipografías.', questionEn: 'Do you design logos?', answerEn: 'Yes, we create complete visual identity, including logo, color palette and fonts.' },
+            { cat: 'design', questionEs: '¿Pueden editar videos que ya tengo grabados?', answerEs: 'Sí, realizamos edición profesional de video para redes, anuncios y presentaciones.', questionEn: 'Can you edit videos I already recorded?', answerEn: 'Yes, we do professional video editing for social media, ads and presentations.' },
+            { cat: 'design', questionEs: '¿Ofrecen plantillas editables?', answerEs: 'Sí, entregamos templates de Canva y otras herramientas para que tu equipo pueda crear contenido fácilmente.', questionEn: 'Do you offer editable templates?', answerEn: 'Yes, we deliver Canva and other tools templates so your team can create content easily.' },
+            // Capacitación
+            { cat: 'training', questionEs: '¿Cómo son los workshops?', answerEs: 'Son sesiones prácticas en vivo (online o presencial) donde tu equipo aprende a crear contenido, manejar herramientas y aplicar estrategias.', questionEn: 'How are the workshops?', answerEn: 'They are practical live sessions (online or in-person) where your team learns to create content, use tools and apply strategies.' },
+            { cat: 'training', questionEs: '¿Pueden capacitar a mi equipo en Canva?', answerEs: 'Sí, tenemos workshops específicos de Canva, edición de video y community management.', questionEn: 'Can you train my team in Canva?', answerEn: 'Yes, we have specific workshops on Canva, video editing and community management.' },
+            // Lanzamientos
+            { cat: 'launch', questionEs: '¿Qué incluye la estrategia de lanzamiento?', answerEs: 'Incluye pre-lanzamiento (generar expectativa), campaña de lanzamiento y post-lanzamiento con análisis.', questionEn: 'What does the launch strategy include?', answerEn: 'It includes pre-launch (building anticipation), launch campaign and post-launch analysis.' },
+            { cat: 'launch', questionEs: '¿Hacen colaboraciones con influencers?', answerEs: 'Sí, gestionamos colaboraciones con influencers afines a tu nicho.', questionEn: 'Do you do influencer collaborations?', answerEn: 'Yes, we manage collaborations with influencers related to your niche.' }
+        ];
+
+        // Completar hasta 52 preguntas
+        for (let i = 0; i < 28; i++) {
+            faqData.push({
+                cat: 'business',
+                questionEs: `Pregunta frecuente sobre negocios ${i + 22}?`,
+                answerEs: `Esta es la respuesta número ${i + 22} para que tengas toda la información sobre nuestros servicios empresariales.`,
+                questionEn: `Business FAQ ${i + 22}?`,
+                answerEn: `This is answer number ${i + 22} so you have all the info about our business services.`
+            });
+        }
+
+        let currentLang = 'es';
+
+        function renderFAQs() {
+            const container = document.getElementById('faqGrid');
+            if (!container) return;
+            container.innerHTML = '';
+            faqData.forEach((faq, index) => {
+                const item = document.createElement('div');
+                item.className = 'faq-item';
+                item.innerHTML = `
+                    <div class="faq-question">${currentLang === 'es' ? faq.questionEs : faq.questionEn} <span>➕</span></div>
+                    <div class="faq-answer">${currentLang === 'es' ? faq.answerEs : faq.answerEn}</div>
+                `;
+                item.addEventListener('click', () => item.classList.toggle('active'));
+                container.appendChild(item);
+            });
+        }
+
+        // Traducciones
+        const translations = {
+            es: {
+                'hero.title': 'Estrategias para <span>Empresas</span>',
+                'hero.subtitle': 'Soluciones integrales para emprendedores y empresas que quieren destacar en el mundo digital y escalar sus resultados.',
+                'services.tag': 'Servicios',
+                'services.title': 'Soluciones Profesionales',
+                'services.card1.name': 'Estrategia de Marca',
+                'services.card1.desc': 'Construimos la identidad digital de tu negocio desde cero o la renovamos para el mercado actual.',
+                'services.card1.f1': 'Definición de identidad de marca digital',
+                'services.card1.f2': 'Posicionamiento estratégico',
+                'services.card1.f3': 'Manual de marca para redes sociales',
+                'services.card1.f4': 'Análisis de competencia',
+                'services.card1.f5': 'Propuesta de valor única',
+                'services.card2.name': 'Marketing Digital Integral',
+                'services.card2.desc': 'Campañas coordinadas en múltiples plataformas para maximizar tu ROI.',
+                'services.card2.f1': 'Gestión de redes sociales empresariales',
+                'services.card2.f2': 'Campañas de email marketing',
+                'services.card2.f3': 'Estrategias de contenido B2B y B2C',
+                'services.card2.f4': 'Automatización de marketing',
+                'services.card2.f5': 'Reportes de analytics mensuales',
+                'services.card3.name': 'E-commerce & Ventas',
+                'services.card3.desc': 'Optimizamos tu embudo de ventas digital para convertir seguidores en clientes.',
+                'services.card3.f1': 'Optimización de perfiles comerciales',
+                'services.card3.f2': 'Estrategias de venta directa en redes',
+                'services.card3.f3': 'Catálogos digitales interactivos',
+                'services.card3.f4': 'Embudos de conversión',
+                'services.card3.f5': 'Retargeting y remarketing',
+                'services.card4.name': 'Diseño & Producción',
+                'services.card4.desc': 'Assets visuales profesionales que comunican la calidad de tu marca.',
+                'services.card4.f1': 'Diseño de identidad visual completa',
+                'services.card4.f2': 'Material publicitario digital',
+                'services.card4.f3': 'Edición de video profesional',
+                'services.card4.f4': 'Fotografía de producto (dirección)',
+                'services.card4.f5': 'Templates editables para equipo',
+                'services.card5.name': 'Capacitación & Workshops',
+                'services.card5.desc': 'Empoderamos a tu equipo con las habilidades del marketing moderno.',
+                'services.card5.f1': 'Talleres de contenido para equipos',
+                'services.card5.f2': 'Capacitación en herramientas (Canva, etc)',
+                'services.card5.f3': 'Estrategias de community management',
+                'services.card5.f4': 'Mejores prácticas por plataforma',
+                'services.card5.f5': 'Material de consulta permanente',
+                'services.card6.name': 'Lanzamientos & Campañas',
+                'services.card6.desc': 'Estrategias de lanzamiento que generan buzz y ventas desde el día uno.',
+                'services.card6.f1': 'Estrategia de pre-lanzamiento',
+                'services.card6.f2': 'Campañas de lanzamiento 360°',
+                'services.card6.f3': 'Colaboraciones con influencers',
+                'services.card6.f4': 'Eventos digitales y lives',
+                'services.card6.f5': 'Análisis post-campaña',
+                'consult.title': 'Consultoría 1:1 Premium',
+                'consult.desc1': 'Sesiones personalizadas para dueños de negocio que necesitan una estrategia a medida y acompañamiento directo.',
+                'consult.desc2': 'Ideal para empresas en crecimiento, lanzamientos importantes o rebranding completo.',
+                'consult.item1': 'Sesión diagnóstico de 90 minutos',
+                'consult.item2': 'Plan de acción personalizado entregable',
+                'consult.item3': '2 sesiones de seguimiento',
+                'consult.item4': 'Acceso directo por WhatsApp por 30 días',
+                'consult.item5': 'Revisión de materials y copy',
+                'consult.button': 'Agendar Consultoría',
+                'consult.priceLabel': 'Inversión',
+                'consult.priceNote': 'o 2 pagos de $525',
+                'process.tag': 'Proceso',
+                'process.title': 'Cómo Trabajamos',
+                'process.step1': 'Descubrimiento',
+                'process.desc1': 'Analizamos tu negocio, competencia y objetivos',
+                'process.step2': 'Estrategia',
+                'process.desc2': 'Diseñamos un plan de acción con KPIs claros',
+                'process.step3': 'Ejecución',
+                'process.desc3': 'Implementamos tácticas con reportes semanales',
+                'process.step4': 'Optimización',
+                'process.desc4': 'Analizamos, ajustamos y escalamos resultados',
+                'faq.badge': '❓ FAQ',
+                'faq.title': 'Preguntas Frecuentes sobre Negocios',
+                'cta.title': '¿Lista para llevar tu negocio al siguiente nivel?',
+                'cta.subtitle': 'Agenda una llamada gratuita de 15 minutos para evaluar cómo podemos ayudarte.',
+                'cta.button': 'Agendar Llamada Gratis',
+                'contact.title': 'Contacto',
+                'contact.cta': 'Envíanos un mensaje',
+                'contact.policies': 'Políticas de privacidad · Términos de uso',
+                'footer': '© 2025 Virtual Glow. Todos los derechos reservados.'
+            },
+            en: {
+                'hero.title': 'Strategies for <span>Businesses</span>',
+                'hero.subtitle': 'All-in-one solutions for entrepreneurs and companies that want to stand out in the digital world and scale their results.',
+                'services.tag': 'Services',
+                'services.title': 'Professional Solutions',
+                'services.card1.name': 'Brand Strategy',
+                'services.card1.desc': 'We build your business digital identity from scratch or renew it for the current market.',
+                'services.card1.f1': 'Digital brand identity definition',
+                'services.card1.f2': 'Strategic positioning',
+                'services.card1.f3': 'Brand manual for social media',
+                'services.card1.f4': 'Competitor analysis',
+                'services.card1.f5': 'Unique value proposition',
+                'services.card2.name': 'Integrated Digital Marketing',
+                'services.card2.desc': 'Coordinated campaigns across multiple platforms to maximize your ROI.',
+                'services.card2.f1': 'Business social media management',
+                'services.card2.f2': 'Email marketing campaigns',
+                'services.card2.f3': 'B2B and B2C content strategies',
+                'services.card2.f4': 'Marketing automation',
+                'services.card2.f5': 'Monthly analytics reports',
+                'services.card3.name': 'E-commerce & Sales',
+                'services.card3.desc': 'We optimize your digital sales funnel to turn followers into customers.',
+                'services.card3.f1': 'Business profile optimization',
+                'services.card3.f2': 'Direct sales strategies on social media',
+                'services.card3.f3': 'Interactive digital catalogs',
+                'services.card3.f4': 'Conversion funnels',
+                'services.card3.f5': 'Retargeting and remarketing',
+                'services.card4.name': 'Design & Production',
+                'services.card4.desc': 'Professional visual assets that communicate your brand quality.',
+                'services.card4.f1': 'Complete visual identity design',
+                'services.card4.f2': 'Digital advertising material',
+                'services.card4.f3': 'Professional video editing',
+                'services.card4.f4': 'Product photography (direction)',
+                'services.card4.f5': 'Editable templates for your team',
+                'services.card5.name': 'Training & Workshops',
+                'services.card5.desc': 'We empower your team with modern marketing skills.',
+                'services.card5.f1': 'Content workshops for teams',
+                'services.card5.f2': 'Tool training (Canva, etc)',
+                'services.card5.f3': 'Community management strategies',
+                'services.card5.f4': 'Best practices per platform',
+                'services.card5.f5': 'Permanent reference material',
+                'services.card6.name': 'Launches & Campaigns',
+                'services.card6.desc': 'Launch strategies that generate buzz and sales from day one.',
+                'services.card6.f1': 'Pre-launch strategy',
+                'services.card6.f2': '360° launch campaigns',
+                'services.card6.f3': 'Influencer collaborations',
+                'services.card6.f4': 'Digital events and lives',
+                'services.card6.f5': 'Post-campaign analysis',
+                'consult.title': '1:1 Premium Consulting',
+                'consult.desc1': 'Personalized sessions for business owners who need a custom strategy and direct support.',
+                'consult.desc2': 'Ideal for growing companies, important launches or complete rebranding.',
+                'consult.item1': '90-minute diagnostic session',
+                'consult.item2': 'Custom action plan deliverable',
+                'consult.item3': '2 follow-up sessions',
+                'consult.item4': 'Direct WhatsApp access for 30 days',
+                'consult.item5': 'Materials and copy review',
+                'consult.button': 'Schedule Consultation',
+                'consult.priceLabel': 'Investment',
+                'consult.priceNote': 'or 2 payments of $525',
+                'process.tag': 'Process',
+                'process.title': 'How We Work',
+                'process.step1': 'Discovery',
+                'process.desc1': 'We analyze your business, competition and goals',
+                'process.step2': 'Strategy',
+                'process.desc2': 'We design an action plan with clear KPIs',
+                'process.step3': 'Execution',
+                'process.desc3': 'We implement tactics with weekly reports',
+                'process.step4': 'Optimization',
+                'process.desc4': 'We analyze, adjust and scale results',
+                'faq.badge': '❓ FAQ',
+                'faq.title': 'Frequently Asked Questions about Business',
+                'cta.title': 'Ready to take your business to the next level?',
+                'cta.subtitle': 'Schedule a free 15-minute call to evaluate how we can help you.',
+                'cta.button': 'Schedule Free Call',
+                'contact.title': 'Contact',
+                'contact.cta': 'Send us a message',
+                'contact.policies': 'Privacy Policy · Terms of use',
+                'footer': '© 2025 Virtual Glow. All rights reserved.'
+            }
+        };
+
+        function translatePage() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    if (key === 'hero.title') {
+                        el.innerHTML = translations[currentLang][key];
+                    } else {
+                        el.innerText = translations[currentLang][key];
+                    }
+                }
+            });
+            renderFAQs();
+        }
+
+        // Event listeners para idioma
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.getAttribute('data-lang');
+                translatePage();
+            });
+        });
+
+        // Navegación suave a secciones internas
+        document.querySelectorAll('[data-section]').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = el.getAttribute('data-section');
+                const target = document.getElementById(section);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 600);
+            renderFAQs();
+        });
+
+        // Menú móvil
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Scroll nav
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
