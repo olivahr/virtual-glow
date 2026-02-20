@@ -1,0 +1,641 @@
+<!-- tiktok.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok - Virtual Glow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+        
+        .nav-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .nav-logo span {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #000;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a.active {
+            color: #000;
+            font-weight: 700;
+        }
+        
+        .hero-section {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #25f4ee20 0%, #fe2c5520 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #25f4ee40 0%, transparent 70%);
+            top: 10%;
+            left: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #fe2c5540 0%, transparent 70%);
+            bottom: 10%;
+            right: 10%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+        
+        .hero-section h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-section p {
+            font-size: 1.3rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 800;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            border-radius: 2px;
+        }
+        
+        .packs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .pack-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        .pack-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+        }
+        
+        .pack-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: rgba(37, 244, 238, 0.3);
+        }
+        
+        .pack-card.featured {
+            border: 3px solid #25f4ee;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(37, 244, 238, 0.2);
+        }
+        
+        .pack-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 0 40px rgba(37, 244, 238, 0.3);
+        }
+        
+        .pack-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            color: white;
+            padding: 0.5rem 3rem;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .pack-name {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+        
+        .pack-subtitle {
+            color: #888;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .pack-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pack-features li {
+            padding: 0.7rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: #444;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .pack-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .pack-features li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+        }
+        
+        .pack-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.4);
+        }
+        
+        .viral-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 4rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .viral-section::before {
+            content: '🔥';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 8rem;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+        
+        .viral-title {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #fe2c55, #25f4ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .viral-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .viral-item {
+            background: linear-gradient(135deg, #f8f8f8 0%, #fff 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid #fe2c55;
+            transition: all 0.3s;
+        }
+        
+        .viral-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .viral-item h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .viral-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .stats-section {
+            margin-top: 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .cta-section {
+            margin-top: 6rem;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #25f4ee20 0%, #fe2c5520 100%);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '🎵';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cta-section h2 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section p {
+            color: #555;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-large {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.3);
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-large:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(254, 44, 85, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #888;
+            margin-top: 4rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-section h1 {
+                font-size: 2rem;
+                flex-direction: column;
+            }
+            
+            .packs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pack-card.featured {
+                transform: scale(1);
+            }
+            
+            .pack-card.featured:hover {
+                transform: scale(1) translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="nav-logo">
+                <img src="logod.jpg" alt="Virtual Glow">
+                <span>Virtual Glow</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="instagram.html">Instagram</a>
+                <a href="tiktok.html" class="active">TikTok</a>
+                <a href="business.html">Business</a>
+            </div>
+        </nav>
+    </header>
+    
+    <section class="hero-section">
+        <h1>🎵 TikTok</h1>
+        <p>Domina el juego del contenido viral. Estrategias probadas para hacer explotar tu cuenta y convertir views en ventas. 🚀</p>
+    </section>
+    
+    <div class="container">
+        <h2 class="section-title">Packs TikTok Viral</h2>
+        
+        <div class="packs-grid">
+            <div class="pack-card">
+                <h3 class="pack-name">TikTok Mini</h3>
+                <p class="pack-subtitle">El impulso inicial que necesitas para despegar</p>
+                <ul class="pack-features">
+                    <li>Optimización estratégica de bio</li>
+                    <li>Auditoría rápida del perfil (qué arreglar YA)</li>
+                    <li>12 ideas de videos virales personalizadas</li>
+                    <li>5 hooks que paran el scroll</li>
+                    <li>Guía rápida: cómo grabar con tu celular (beauty edition)</li>
+                </ul>
+                <div class="pack-footer">
+                    <a href="#" class="btn-primary">Quiero Viralizar</a>
+                </div>
+            </div>
+            
+            <div class="pack-card">
+                <h3 class="pack-name">TikTok Plus</h3>
+                <p class="pack-subtitle">Estrategia completa para crecimiento constante</p>
+                <ul class="pack-features">
+                    <li>Todo lo del Mini</li>
+                    <li>Calendario de contenido de 14 días</li>
+                    <li>12 hooks virales adicionales (total 17)</li>
+                    <li>6 captions optimizados para conversión</li>
+                    <li>6 ideas de tendencias adaptadas a su nicho</li>
+                    <li>Guía: estructura de video que retiene (HOOK–VALOR–CTA)</li>
+                    <li>Checklist: errores que matan el alcance</li>
+                </ul>
+                <div class="pack-footer">
+                    <a href="#" class="btn-primary">Quiero Viralizar</a>
+                </div>
+            </div>
+            
+            <div class="pack-card featured">
+                <div class="pack-badge">Viral Pro</div>
+                <h3 class="pack-name">TikTok Full</h3>
+                <p class="pack-subtitle">La fórmula completa para ser TikTok famoso</p>
+                <ul class="pack-features">
+                    <li>Todo lo del Plus</li>
+                    <li>Calendario de contenido de 30 días</li>
+                    <li>25 hooks virales de alto impacto</li>
+                    <li>12 captions listos para copiar y pegar</li>
+                    <li>Estrategia personalizada según su negocio</li>
+                    <li>Auditoría profunda del perfil</li>
+                    <li>Banco de sonidos virales actualizados</li>
+                    <li>5 ideas de contenido tipo "agenda llena"</li>
+                    <li>Plan de crecimiento de 30 días</li>
+                    <li>Soporte por 7 días por DM/email</li>
+                </ul>
+                <div class="pack-footer">
+                    <a href="#" class="btn-primary">Quiero Viralizar</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="viral-section">
+            <h3 class="viral-title">🔥 ¿Por qué TikTok con Virtual Glow?</h3>
+            <div class="viral-grid">
+                <div class="viral-item">
+                    <h4>🎯 Estrategia Data-Driven</h4>
+                    <p>Analizamos tendencias reales y algoritmos para maximizar tu alcance</p>
+                </div>
+                <div class="viral-item">
+                    <h4>⚡ Contenido Rápido</h4>
+                    <p>Ideas que se hacen en minutos, no en horas. Eficiencia viral</p>
+                </div>
+                <div class="viral-item">
+                    <h4>💎 Nicho Específico</h4>
+                    <p>Adaptamos cada estrategia a tu industria y público objetivo</p>
+                </div>
+                <div class="viral-item">
+                    <h4>🔄 Actualización Constante</h4>
+                    <p>Sonidos y tendencias actualizadas semanalmente</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number">500%</div>
+                <div class="stat-label">Incremento promedio de views</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10M+</div>
+                <div class="stat-label">Views generados para clientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Cuentas virales creadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24h</div>
+                <div class="stat-label">Tiempo promedio para primer viral</div>
+            </div>
+        </div>
+        
+        <section class="cta-section">
+            <h2>🚀 ¿Listo para hacer TikTok tu mejor vendedor?</h2>
+            <p>El algoritmo favorece a quienes empiezan hoy. No mañana.</p>
+            <a href="#" class="btn-large">Empezar Ahora</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Virtual Glow. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
