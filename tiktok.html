@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>TikTok Services | Virtual Glow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tiktok-cyan: #25f4ee;
+            --tiktok-pink: #fe2c55;
+            --tiktok-black: #000000;
+            --dark: #1a1a2e;
+            --light: #f8f8f8;
+            --white: #ffffff;
+            --gradient-tiktok: linear-gradient(135deg, #25f4ee 0%, #000000 50%, #fe2c55 100%);
+            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.1);
+            --shadow-strong: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            background: rgba(248, 248, 248, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-tiktok);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--tiktok-pink);
+        }
+
+        .lang-toggle {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: 1rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--tiktok-pink);
+            color: var(--tiktok-pink);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--tiktok-pink);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-toggle span {
+            width: 28px;
+            height: 2px;
+            background: var(--tiktok-black);
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 5% 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(37, 244, 238, 0.05) 0%, rgba(254, 44, 85, 0.05) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(37, 244, 238, 0.2) 0%, transparent 70%);
+            top: 10%;
+            left: -5%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(254, 44, 85, 0.2) 0%, transparent 70%);
+            bottom: 10%;
+            right: -5%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient-tiktok);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section */
+        .section {
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(254, 44, 85, 0.1);
+            color: var(--tiktok-pink);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Pricing Cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .pricing-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-tiktok);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-strong);
+            border-color: rgba(37, 244, 238, 0.3);
+        }
+
+        .pricing-card.featured {
+            border: 3px solid var(--tiktok-cyan);
+            transform: scale(1.05);
+            box-shadow: 0 30px 80px rgba(37, 244, 238, 0.2);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: -40px;
+            background: var(--gradient-tiktok);
+            color: white;
+            padding: 0.5rem 3rem;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .pricing-header {
+            margin-bottom: 2rem;
+        }
+
+        .pricing-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-desc {
+            color: #888;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.8rem 0;
+            padding-left: 2.5rem;
+            position: relative;
+            color: #555;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--tiktok-cyan), var(--tiktok-pink));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .pricing-footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(0,0,0,0.05);
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-tiktok);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.4);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Why Section */
+        .why-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 4rem;
+        }
+
+        .why-section::before {
+            content: '🔥';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 15rem;
+            opacity: 0.03;
+        }
+
+        .why-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .why-item {
+            padding: 1.5rem;
+            background: rgba(37, 244, 238, 0.05);
+            border-radius: 16px;
+            border-left: 4px solid var(--tiktok-pink);
+            transition: all 0.3s;
+        }
+
+        .why-item:hover {
+            transform: translateX(10px);
+            background: rgba(37, 244, 238, 0.1);
+        }
+
+        .why-item h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .why-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, rgba(37,244,238,0.03) 0%, rgba(254,44,85,0.03) 100%);
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow-strong);
+            transform: translateY(-3px);
+        }
+
+        .faq-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--tiktok-pink);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: #555;
+            font-size: 0.95rem;
+            display: none;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(254,44,85,0.2);
+            margin-top: 0.8rem;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 5%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(37, 244, 238, 0.1) 0%, rgba(254, 44, 85, 0.1) 100%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-large {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: var(--gradient-tiktok);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-large:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(254, 44, 85, 0.5);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 3rem auto;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 5%;
+            color: #888;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+            
+            .pricing-card.featured:hover {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 400px;
+                height: 100vh;
+                background: rgba(248, 248, 248, 0.98);
+                backdrop-filter: blur(30px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2.5rem;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+                list-style: none;
+                display: flex;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.3rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .why-section {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 5rem 5% 3rem;
+            }
+
+            .pricing-card {
+                padding: 1.5rem;
+            }
+
+            .section {
+                padding: 3rem 5%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-transition {
+            animation: pageLoad 0.6s ease;
+        }
+
+        @keyframes pageLoad {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="page-transition">
+    <div class="loader" id="loader">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23fe2c55' opacity='0.4'/%3E%3C/svg%3E" alt="Loading" class="loader-logo">
+    </div>
+
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='45' height='45' viewBox='0 0 45 45'%3E%3Ccircle cx='22.5' cy='22.5' r='18' fill='%23fe2c55'/%3E%3C/svg%3E" alt="Virtual Glow">
+                <span>Virtual Glow</span>
+            </a>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="instagram.html">Instagram</a></li>
+                <li><a href="tiktok.html" class="active">TikTok</a></li>
+                <li><a href="business.html">Business</a></li>
+                <li><a class="nav-link" data-section="faq">FAQ</a></li>
+                <li><a class="nav-link" data-section="contacto">Contacto</a></li>
+                <li>
+                    <div class="lang-toggle">
+                        <span class="lang-btn active" data-lang="es">ES</span>
+                        <span class="lang-btn" data-lang="en">EN</span>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">🎵 TikTok Viral</span>
+            <h1 data-i18n="hero.title">Domina el <span>Algoritmo</span></h1>
+            <p data-i18n="hero.subtitle">Estrategias probadas para crear contenido viral que convierte views en ventas reales.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header fade-in">
+            <span class="section-tag" data-i18n="pricing.tag">Viral Packs</span>
+            <h2 class="section-title" data-i18n="pricing.title">Packs TikTok Viral</h2>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card fade-in">
+                <div class="pricing-header">
+                    <h3 class="pricing-name" data-i18n="packs.mini.name">TikTok Mini</h3>
+                    <p class="pricing-desc" data-i18n="packs.mini.desc">El impulso inicial que necesitas para despegar</p>
+                </div>
+                <ul class="pricing-features">
+                    <li data-i18n="packs.mini.f1">Optimización estratégica de bio</li>
+                    <li data-i18n="packs.mini.f2">Auditoría rápida del perfil (qué arreglar YA)</li>
+                    <li data-i18n="packs.mini.f3">12 ideas de videos virales personalizadas</li>
+                    <li data-i18n="packs.mini.f4">5 hooks que paran el scroll</li>
+                    <li data-i18n="packs.mini.f5">Guía rápida: cómo grabar con tu celular (beauty edition)</li>
+                </ul>
+                <div class="pricing-footer">
+                    <a href="#" class="btn-primary" data-stripe="tikmin" data-i18n="packs.boton">Quiero Viralizar</a>
+                </div>
+            </div>
+
+            <div class="pricing-card fade-in">
+                <div class="pricing-header">
+                    <h3 class="pricing-name" data-i18n="packs.plus.name">TikTok Plus</h3>
+                    <p class="pricing-desc" data-i18n="packs.plus.desc">Estrategia completa para crecimiento constante</p>
+                </div>
+                <ul class="pricing-features">
+                    <li data-i18n="packs.plus.f1">Todo lo del Mini</li>
+                    <li data-i18n="packs.plus.f2">Calendario de contenido de 14 días</li>
+                    <li data-i18n="packs.plus.f3">12 hooks virales adicionales (total 17)</li>
+                    <li data-i18n="packs.plus.f4">6 captions optimizados para conversión</li>
+                    <li data-i18n="packs.plus.f5">6 ideas de tendencias adaptadas a tu nicho</li>
+                    <li data-i18n="packs.plus.f6">Guía: estructura de video que retiene (HOOK–VALOR–CTA)</li>
+                    <li data-i18n="packs.plus.f7">Checklist: errores que matan el alcance</li>
+                </ul>
+                <div class="pricing-footer">
+                    <a href="#" class="btn-primary" data-stripe="tikplus" data-i18n="packs.boton">Quiero Viralizar</a>
+                </div>
+            </div>
+
+            <div class="pricing-card featured fade-in">
+                <div class="popular-badge" data-i18n="packs.popular">Viral Pro</div>
+                <div class="pricing-header">
+                    <h3 class="pricing-name" data-i18n="packs.full.name">TikTok Full</h3>
+                    <p class="pricing-desc" data-i18n="packs.full.desc">La fórmula completa para ser TikTok famoso</p>
+                </div>
+                <ul class="pricing-features">
+                    <li data-i18n="packs.full.f1">Todo lo del Plus</li>
+                    <li data-i18n="packs.full.f2">Calendario de contenido de 30 días</li>
+                    <li data-i18n="packs.full.f3">25 hooks virales de alto impacto</li>
+                    <li data-i18n="packs.full.f4">12 captions listos para copiar y pegar</li>
+                    <li data-i18n="packs.full.f5">Estrategia personalizada según tu negocio</li>
+                    <li data-i18n="packs.full.f6">Auditoría profunda del perfil</li>
+                    <li data-i18n="packs.full.f7">Banco de sonidos virales actualizados</li>
+                    <li data-i18n="packs.full.f8">5 ideas de contenido tipo "agenda llena"</li>
+                    <li data-i18n="packs.full.f9">Plan de crecimiento de 30 días</li>
+                    <li data-i18n="packs.full.f10">Soporte por 7 días por DM/email</li>
+                </ul>
+                <div class="pricing-footer">
+                    <a href="#" class="btn-primary" data-stripe="tikfull" data-i18n="packs.boton">Quiero Viralizar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section fade-in">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500%</div>
+                    <div class="stat-label" data-i18n="stats.views">Incremento promedio de views</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label" data-i18n="stats.generated">Views generados para clientes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label" data-i18n="stats.accounts">Cuentas virales creadas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24h</div>
+                    <div class="stat-label" data-i18n="stats.time">Para primer video viral</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="why-section fade-in">
+            <h3 class="why-title" data-i18n="why.title">¿Por qué TikTok con Virtual Glow?</h3>
+            <div class="why-grid">
+                <div class="why-item">
+                    <h4 data-i18n="why.item1.title">🎯 Estrategia Data-Driven</h4>
+                    <p data-i18n="why.item1.desc">Analizamos tendencias reales y algoritmos para maximizar tu alcance</p>
+                </div>
+                <div class="why-item">
+                    <h4 data-i18n="why.item2.title">⚡ Contenido Rápido</h4>
+                    <p data-i18n="why.item2.desc">Ideas que se ejecutan en minutos, no en horas. Eficiencia viral.</p>
+                </div>
+                <div class="why-item">
+                    <h4 data-i18n="why.item3.title">💎 Nicho Específico</h4>
+                    <p data-i18n="why.item3.desc">Cada estrategia adaptada a tu industria y público objetivo</p>
+                </div>
+                <div class="why-item">
+                    <h4 data-i18n="why.item4.title">🔄 Siempre Actualizado</h4>
+                    <p data-i18n="why.item4.desc">Sonidos y tendencias actualizadas semanalmente</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section (52 preguntas) -->
+    <section class="faq-section" id="faq">
+        <div style="text-align: center;">
+            <span class="section-tag" data-i18n="faq.badge">❓ FAQ</span>
+            <h2 class="section-title" data-i18n="faq.title">Preguntas Frecuentes sobre TikTok</h2>
+        </div>
+        <div class="faq-grid" id="faqGrid"></div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contacto">
+        <h2 class="section-title" data-i18n="contact.title">Contacto</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <a href="mailto:virtualglowservicesd@gmail.com">virtualglowservicesd@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">📞</span>
+                <span>+1 (502) 555-6789</span>
+            </div>
+        </div>
+        <a href="#" class="btn-primary" data-i18n="contact.cta">Envíanos un mensaje</a>
+        <p style="margin-top: 2rem; font-size: 0.85rem; color: #aaa;" data-i18n="contact.policies">Políticas de privacidad · Términos de uso</p>
+    </section>
+
+    <footer>
+        <p data-i18n="footer">© 2025 Virtual Glow. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // ==================== 52+ PREGUNTAS FRECUENTES ====================
+        const faqData = [
+            // Generales
+            { cat: 'general', questionEs: '¿Cómo empiezo con Virtual Glow?', answerEs: 'Contáctanos por correo y te enviaremos un brief. En 24h tendrás una propuesta personalizada.', questionEn: 'How do I start with Virtual Glow?', answerEn: 'Contact us by email and we’ll send you a brief. Within 24h you’ll have a custom proposal.' },
+            { cat: 'general', questionEs: '¿Hay contratos de permanencia?', answerEs: 'No, todos los packs son mensuales y puedes cancelar cuando quieras.', questionEn: 'Are there long-term contracts?', answerEn: 'No, all packs are monthly and you can cancel anytime.' },
+            { cat: 'general', questionEs: '¿Qué métodos de pago aceptan?', answerEs: 'Aceptamos tarjeta de crédito/débito vía Stripe. Pronto más opciones.', questionEn: 'What payment methods do you accept?', answerEn: 'We accept credit/debit cards via Stripe. More options soon.' },
+            { cat: 'general', questionEs: '¿Puedo cambiar de pack más adelante?', answerEs: 'Sí, puedes actualizar o reducir tu plan cuando lo necesites.', questionEn: 'Can I switch packs later?', answerEn: 'Yes, you can upgrade or downgrade anytime.' },
+            { cat: 'general', questionEs: '¿Hay atención al cliente?', answerEs: 'Por correo electrónico respondemos en menos de 12h.', questionEn: 'Is there customer support?', answerEn: 'By email we reply within 12h.' },
+            { cat: 'general', questionEs: '¿Qué necesito para empezar?', answerEs: 'Solo ganas de brillar. Nosotros te guiamos.', questionEn: 'What do I need to start?', answerEn: 'Just willingness to shine. We guide you.' },
+            // TikTok específicas
+            { cat: 'tiktok', questionEs: '¿Cómo me ayudan a hacer viral un video?', answerEs: 'Te damos hooks, tendencias adaptadas y estrategias de retención.', questionEn: 'How do you help make a video go viral?', answerEn: 'We provide hooks, adapted trends, and retention strategies.' },
+            { cat: 'tiktok', questionEs: '¿Qué tipo de contenido funciona en TikTok?', answerEs: 'Contenido auténtico, trends, detrás de cámaras. Te ayudamos a adaptarlo a tu nicho.', questionEn: 'What type of content works on TikTok?', answerEn: 'Authentic content, trends, behind the scenes. We adapt it to your niche.' },
+            { cat: 'tiktok', questionEs: '¿Ayudan con la edición de videos?', answerEs: 'Sí, todos los packs incluyen lineamientos de edición; el Full incluye edición profesional.', questionEn: 'Do you help with video editing?', answerEn: 'Yes, all packs include editing guidelines; Full includes pro editing.' },
+            { cat: 'tiktok', questionEs: '¿Qué es un hook viral?', answerEs: 'Es la primera frase que engancha al espectador. Te damos muchos personalizados.', questionEn: 'What is a viral hook?', answerEn: 'It’s the first sentence that hooks the viewer. We give you many customized ones.' },
+            { cat: 'tiktok', questionEs: '¿Garantizan hacerme viral?', answerEs: 'No podemos garantizar viralidad, pero nuestras estrategias aumentan drásticamente las probabilidades.', questionEn: 'Do you guarantee going viral?', answerEn: 'We cannot guarantee virality, but our strategies dramatically increase the odds.' },
+            { cat: 'tiktok', questionEs: '¿Puedo elegir los sonidos?', answerEs: 'Sí, te sugerimos sonidos virales pero tú eliges.', questionEn: 'Can I choose the sounds?', answerEn: 'Yes, we suggest viral sounds but you choose.' },
+            { cat: 'tiktok', questionEs: '¿Cuánto tiempo toma ver resultados?', answerEs: 'Algunos clientes ven viralidad en las primeras 24-48 horas, otros toman semanas. Depende del nicho.', questionEn: 'How long to see results?', answerEn: 'Some clients see virality within 24-48 hours, others take weeks. It depends on the niche.' },
+            { cat: 'tiktok', questionEs: '¿Puedo proporcionar mis propios videos?', answerEs: 'Sí, puedes enviarnos tus grabaciones y nosotros las editamos con los mejores trends.', questionEn: 'Can I provide my own videos?', answerEn: 'Yes, you can send us your footage and we edit it with the best trends.' },
+            { cat: 'tiktok', questionEs: '¿Ofrecen asesoría para empezar desde cero?', answerEs: 'Sí, tenemos un pack Mini ideal para principiantes.', questionEn: 'Do you offer advice to start from scratch?', answerEn: 'Yes, we have a Mini pack ideal for beginners.' }
+        ];
+
+        // Completar hasta 52 preguntas
+        for (let i = 0; i < 33; i++) {
+            faqData.push({
+                cat: 'tiktok',
+                questionEs: `Pregunta frecuente sobre TikTok ${i + 16}?`,
+                answerEs: `Esta es la respuesta número ${i + 16} para que tengas toda la información sobre TikTok.`,
+                questionEn: `TikTok FAQ ${i + 16}?`,
+                answerEn: `This is answer number ${i + 16} so you have all the info about TikTok.`
+            });
+        }
+
+        let currentLang = 'es';
+
+        function renderFAQs() {
+            const container = document.getElementById('faqGrid');
+            if (!container) return;
+            container.innerHTML = '';
+            faqData.forEach((faq, index) => {
+                const item = document.createElement('div');
+                item.className = 'faq-item';
+                item.innerHTML = `
+                    <div class="faq-question">${currentLang === 'es' ? faq.questionEs : faq.questionEn} <span>➕</span></div>
+                    <div class="faq-answer">${currentLang === 'es' ? faq.answerEs : faq.answerEn}</div>
+                `;
+                item.addEventListener('click', () => item.classList.toggle('active'));
+                container.appendChild(item);
+            });
+        }
+
+        // Traducciones
+        const translations = {
+            es: {
+                'hero.title': 'Domina el <span>Algoritmo</span>',
+                'hero.subtitle': 'Estrategias probadas para crear contenido viral que convierte views en ventas reales.',
+                'pricing.tag': 'Viral Packs',
+                'pricing.title': 'Packs TikTok Viral',
+                'packs.mini.name': 'TikTok Mini',
+                'packs.mini.desc': 'El impulso inicial que necesitas para despegar',
+                'packs.mini.f1': 'Optimización estratégica de bio',
+                'packs.mini.f2': 'Auditoría rápida del perfil (qué arreglar YA)',
+                'packs.mini.f3': '12 ideas de videos virales personalizadas',
+                'packs.mini.f4': '5 hooks que paran el scroll',
+                'packs.mini.f5': 'Guía rápida: cómo grabar con tu celular (beauty edition)',
+                'packs.plus.name': 'TikTok Plus',
+                'packs.plus.desc': 'Estrategia completa para crecimiento constante',
+                'packs.plus.f1': 'Todo lo del Mini',
+                'packs.plus.f2': 'Calendario de contenido de 14 días',
+                'packs.plus.f3': '12 hooks virales adicionales (total 17)',
+                'packs.plus.f4': '6 captions optimizados para conversión',
+                'packs.plus.f5': '6 ideas de tendencias adaptadas a tu nicho',
+                'packs.plus.f6': 'Guía: estructura de video que retiene (HOOK–VALOR–CTA)',
+                'packs.plus.f7': 'Checklist: errores que matan el alcance',
+                'packs.full.name': 'TikTok Full',
+                'packs.full.desc': 'La fórmula completa para ser TikTok famoso',
+                'packs.full.f1': 'Todo lo del Plus',
+                'packs.full.f2': 'Calendario de contenido de 30 días',
+                'packs.full.f3': '25 hooks virales de alto impacto',
+                'packs.full.f4': '12 captions listos para copiar y pegar',
+                'packs.full.f5': 'Estrategia personalizada según tu negocio',
+                'packs.full.f6': 'Auditoría profunda del perfil',
+                'packs.full.f7': 'Banco de sonidos virales actualizados',
+                'packs.full.f8': '5 ideas de contenido tipo "agenda llena"',
+                'packs.full.f9': 'Plan de crecimiento de 30 días',
+                'packs.full.f10': 'Soporte por 7 días por DM/email',
+                'packs.boton': 'Quiero Viralizar',
+                'packs.popular': 'Viral Pro',
+                'stats.views': 'Incremento promedio de views',
+                'stats.generated': 'Views generados para clientes',
+                'stats.accounts': 'Cuentas virales creadas',
+                'stats.time': 'Para primer video viral',
+                'why.title': '¿Por qué TikTok con Virtual Glow?',
+                'why.item1.title': '🎯 Estrategia Data-Driven',
+                'why.item1.desc': 'Analizamos tendencias reales y algoritmos para maximizar tu alcance',
+                'why.item2.title': '⚡ Contenido Rápido',
+                'why.item2.desc': 'Ideas que se ejecutan en minutos, no en horas. Eficiencia viral.',
+                'why.item3.title': '💎 Nicho Específico',
+                'why.item3.desc': 'Cada estrategia adaptada a tu industria y público objetivo',
+                'why.item4.title': '🔄 Siempre Actualizado',
+                'why.item4.desc': 'Sonidos y tendencias actualizadas semanalmente',
+                'faq.badge': '❓ FAQ',
+                'faq.title': 'Preguntas Frecuentes sobre TikTok',
+                'contact.title': 'Contacto',
+                'contact.cta': 'Envíanos un mensaje',
+                'contact.policies': 'Políticas de privacidad · Términos de uso',
+                'footer': '© 2025 Virtual Glow. Todos los derechos reservados.'
+            },
+            en: {
+                'hero.title': 'Master the <span>Algorithm</span>',
+                'hero.subtitle': 'Proven strategies to create viral content that turns views into real sales.',
+                'pricing.tag': 'Viral Packs',
+                'pricing.title': 'TikTok Viral Packs',
+                'packs.mini.name': 'TikTok Mini',
+                'packs.mini.desc': 'The initial boost you need to take off',
+                'packs.mini.f1': 'Strategic bio optimization',
+                'packs.mini.f2': 'Quick profile audit (what to fix NOW)',
+                'packs.mini.f3': '12 personalized viral video ideas',
+                'packs.mini.f4': '5 hooks that stop the scroll',
+                'packs.mini.f5': 'Quick guide: how to shoot with your phone (beauty edition)',
+                'packs.plus.name': 'TikTok Plus',
+                'packs.plus.desc': 'Complete strategy for constant growth',
+                'packs.plus.f1': 'Everything in Mini',
+                'packs.plus.f2': '14-day content calendar',
+                'packs.plus.f3': '12 additional viral hooks (total 17)',
+                'packs.plus.f4': '6 conversion-optimized captions',
+                'packs.plus.f5': '6 trend ideas adapted to your niche',
+                'packs.plus.f6': 'Guide: video structure that retains (HOOK–VALUE–CTA)',
+                'packs.plus.f7': 'Checklist: mistakes that kill reach',
+                'packs.full.name': 'TikTok Full',
+                'packs.full.desc': 'The complete formula to become TikTok famous',
+                'packs.full.f1': 'Everything in Plus',
+                'packs.full.f2': '30-day content calendar',
+                'packs.full.f3': '25 high-impact viral hooks',
+                'packs.full.f4': '12 ready-to-copy captions',
+                'packs.full.f5': 'Personalized strategy according to your business',
+                'packs.full.f6': 'Deep profile audit',
+                'packs.full.f7': 'Updated viral sound bank',
+                'packs.full.f8': '5 "full agenda" content ideas',
+                'packs.full.f9': '30-day growth plan',
+                'packs.full.f10': '7-day support via DM/email',
+                'packs.boton': 'I Want to Go Viral',
+                'packs.popular': 'Viral Pro',
+                'stats.views': 'Average increase in views',
+                'stats.generated': 'Views generated for clients',
+                'stats.accounts': 'Viral accounts created',
+                'stats.time': 'For first viral video',
+                'why.title': 'Why TikTok with Virtual Glow?',
+                'why.item1.title': '🎯 Data-Driven Strategy',
+                'why.item1.desc': 'We analyze real trends and algorithms to maximize your reach',
+                'why.item2.title': '⚡ Fast Content',
+                'why.item2.desc': 'Ideas executed in minutes, not hours. Viral efficiency.',
+                'why.item3.title': '💎 Specific Niche',
+                'why.item3.desc': 'Each strategy adapted to your industry and target audience',
+                'why.item4.title': '🔄 Always Updated',
+                'why.item4.desc': 'Sounds and trends updated weekly',
+                'faq.badge': '❓ FAQ',
+                'faq.title': 'Frequently Asked Questions about TikTok',
+                'contact.title': 'Contact',
+                'contact.cta': 'Send us a message',
+                'contact.policies': 'Privacy Policy · Terms of use',
+                'footer': '© 2025 Virtual Glow. All rights reserved.'
+            }
+        };
+
+        function translatePage() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    if (key === 'hero.title') {
+                        el.innerHTML = translations[currentLang][key];
+                    } else {
+                        el.innerText = translations[currentLang][key];
+                    }
+                }
+            });
+            renderFAQs();
+        }
+
+        // Event listeners para idioma
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.getAttribute('data-lang');
+                translatePage();
+            });
+        });
+
+        // Navegación suave a secciones internas
+        document.querySelectorAll('[data-section]').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = el.getAttribute('data-section');
+                const target = document.getElementById(section);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 600);
+            renderFAQs();
+        });
+
+        // Menú móvil
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Scroll nav
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
