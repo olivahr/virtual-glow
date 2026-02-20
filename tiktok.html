@@ -3,639 +3,887 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok - Virtual Glow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>TikTok Services | Virtual Glow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --tiktok-cyan: #25f4ee;
+            --tiktok-pink: #fe2c55;
+            --tiktok-black: #000000;
+            --dark: #1a1a2e;
+            --light: #f8f8f8;
+            --white: #ffffff;
+            --gradient-tiktok: linear-gradient(135deg, #25f4ee 0%, #000000 50%, #fe2c55 100%);
+            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.1);
+            --shadow-strong: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
             overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+
+        /* Loader */
+        .loader {
             position: fixed;
-            width: 100%;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s;
         }
-        
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Navigation */
         .nav {
-            max-width: 1200px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            background: rgba(248, 248, 248, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .nav-logo {
             display: flex;
             align-items: center;
             gap: 1rem;
             text-decoration: none;
         }
-        
+
         .nav-logo img {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        
+
         .nav-logo span {
-            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            background: var(--gradient-tiktok);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 3rem;
+            list-style: none;
         }
-        
+
         .nav-links a {
             text-decoration: none;
-            color: #666;
+            color: var(--dark);
             font-weight: 500;
-            transition: color 0.3s;
             position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
         }
-        
+
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            background: var(--gradient-tiktok);
             transition: width 0.3s;
         }
-        
-        .nav-links a:hover {
-            color: #000;
-        }
-        
-        .nav-links a:hover::after {
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
             width: 100%;
         }
-        
+
+        .nav-links a:hover,
         .nav-links a.active {
-            color: #000;
-            font-weight: 700;
+            color: var(--tiktok-pink);
         }
-        
-        .hero-section {
-            margin-top: 80px;
-            padding: 4rem 2rem;
-            text-align: center;
-            background: linear-gradient(135deg, #25f4ee20 0%, #fe2c5520 100%);
-            position: relative;
-            overflow: hidden;
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
         }
-        
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, #25f4ee40 0%, transparent 70%);
-            top: 10%;
-            left: 10%;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, #fe2c5540 0%, transparent 70%);
-            bottom: 10%;
-            right: 10%;
-            animation: float 8s ease-in-out infinite reverse;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-20px) scale(1.1); }
-        }
-        
-        .hero-section h1 {
-            font-size: 3rem;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero-section p {
-            font-size: 1.3rem;
-            color: #555;
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: 800;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+
+        .menu-toggle span {
+            width: 28px;
+            height: 2px;
+            background: var(--tiktok-black);
+            transition: all 0.3s;
             border-radius: 2px;
         }
-        
-        .packs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-        
-        .pack-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        /* Hero */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 5% 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(37, 244, 238, 0.05) 0%, rgba(254, 44, 85, 0.05) 100%);
             position: relative;
             overflow: hidden;
-            border: 2px solid transparent;
         }
-        
-        .pack-card::before {
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(37, 244, 238, 0.2) 0%, transparent 70%);
+            top: 10%;
+            left: -5%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(254, 44, 85, 0.2) 0%, transparent 70%);
+            bottom: 10%;
+            right: -5%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient-tiktok);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section */
+        .section {
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(254, 44, 85, 0.1);
+            color: var(--tiktok-pink);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Pricing Cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .pricing-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            height: 4px;
+            background: var(--gradient-tiktok);
         }
-        
-        .pack-card:hover {
+
+        .pricing-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-strong);
             border-color: rgba(37, 244, 238, 0.3);
         }
-        
-        .pack-card.featured {
-            border: 3px solid #25f4ee;
+
+        .pricing-card.featured {
+            border: 3px solid var(--tiktok-cyan);
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(37, 244, 238, 0.2);
+            box-shadow: 0 30px 80px rgba(37, 244, 238, 0.2);
         }
-        
-        .pack-card.featured:hover {
+
+        .pricing-card.featured:hover {
             transform: scale(1.05) translateY(-10px);
-            box-shadow: 0 0 40px rgba(37, 244, 238, 0.3);
         }
-        
-        .pack-badge {
+
+        .popular-badge {
             position: absolute;
             top: 20px;
-            right: -35px;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            right: -40px;
+            background: var(--gradient-tiktok);
             color: white;
             padding: 0.5rem 3rem;
             transform: rotate(45deg);
             font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        
-        .pack-name {
+
+        .pricing-header {
+            margin-bottom: 2rem;
+        }
+
+        .pricing-name {
+            font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            background: var(--gradient-tiktok);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
-            font-weight: 800;
         }
-        
-        .pack-subtitle {
+
+        .pricing-desc {
             color: #888;
-            font-style: italic;
-            margin-bottom: 1.5rem;
             font-size: 0.95rem;
+            font-style: italic;
         }
-        
-        .pack-features {
+
+        .pricing-features {
             list-style: none;
             margin-bottom: 2rem;
         }
-        
-        .pack-features li {
-            padding: 0.7rem 0;
-            padding-left: 2rem;
+
+        .pricing-features li {
+            padding: 0.8rem 0;
+            padding-left: 2.5rem;
             position: relative;
-            color: #444;
-            border-bottom: 1px dashed #eee;
+            color: #555;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.95rem;
         }
-        
-        .pack-features li:last-child {
-            border-bottom: none;
-        }
-        
-        .pack-features li::before {
-            content: '✅';
+
+        .pricing-features li::before {
+            content: '✓';
             position: absolute;
             left: 0;
-            font-size: 1.1rem;
-        }
-        
-        .pack-footer {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--tiktok-cyan), var(--tiktok-pink));
+            color: white;
+            border-radius: 50%;
             display: flex;
+            align-items: center;
             justify-content: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid #f0f0f0;
+            font-size: 0.8rem;
+            font-weight: 700;
         }
-        
+
+        .pricing-footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(0,0,0,0.05);
+        }
+
         .btn-primary {
             display: block;
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            background: var(--gradient-tiktok);
             color: white;
             text-align: center;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            margin-top: 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
-            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-        
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.4);
-        }
-        
-        .viral-section {
-            background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            margin-top: 4rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
         }
-        
-        .viral-section::before {
-            content: '🔥';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 8rem;
-            opacity: 0.1;
-            transform: rotate(15deg);
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.4);
         }
-        
-        .viral-title {
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, #fe2c55, #25f4ee);
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-tiktok);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
-        
-        .viral-grid {
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Why Section */
+        .why-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .why-section::before {
+            content: '🔥';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 15rem;
+            opacity: 0.03;
+        }
+
+        .why-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .why-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
         }
-        
-        .viral-item {
-            background: linear-gradient(135deg, #f8f8f8 0%, #fff 100%);
+
+        .why-item {
             padding: 1.5rem;
-            border-radius: 15px;
-            border-left: 4px solid #fe2c55;
+            background: rgba(37, 244, 238, 0.05);
+            border-radius: 16px;
+            border-left: 4px solid var(--tiktok-pink);
             transition: all 0.3s;
         }
-        
-        .viral-item:hover {
+
+        .why-item:hover {
             transform: translateX(10px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            background: rgba(37, 244, 238, 0.1);
         }
-        
-        .viral-item h4 {
-            color: #333;
+
+        .why-item h4 {
+            color: var(--dark);
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
-        
-        .viral-item p {
+
+        .why-item p {
             color: #666;
             font-size: 0.9rem;
         }
-        
-        .stats-section {
-            margin-top: 4rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .stat-label {
-            color: #666;
-            margin-top: 0.5rem;
-            font-weight: 500;
-        }
-        
+
+        /* CTA Section */
         .cta-section {
-            margin-top: 6rem;
+            padding: 6rem 5%;
             text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, #25f4ee20 0%, #fe2c5520 100%);
-            border-radius: 20px;
             position: relative;
             overflow: hidden;
+            background: linear-gradient(135deg, rgba(37, 244, 238, 0.1) 0%, rgba(254, 44, 85, 0.1) 100%);
         }
-        
-        .cta-section::before {
-            content: '🎵';
-            position: absolute;
-            font-size: 15rem;
-            opacity: 0.05;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
         }
-        
+
         .cta-section h2 {
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--dark);
             margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
         }
-        
+
         .cta-section p {
-            color: #555;
+            color: #666;
+            font-size: 1.2rem;
             margin-bottom: 2rem;
-            font-size: 1.1rem;
-            position: relative;
-            z-index: 1;
         }
-        
+
         .btn-large {
             display: inline-block;
             padding: 1.2rem 3rem;
-            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            background: var(--gradient-tiktok);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.3);
-            position: relative;
-            z-index: 1;
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.4);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .btn-large:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(254, 44, 85, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(254, 44, 85, 0.5);
         }
-        
+
+        /* Footer */
         footer {
             text-align: center;
-            padding: 3rem 2rem;
+            padding: 3rem 5%;
             color: #888;
-            margin-top: 4rem;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem;
         }
-        
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero-section h1 {
-                font-size: 2rem;
-                flex-direction: column;
-            }
-            
-            .packs-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .pack-card.featured {
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .pricing-card.featured {
                 transform: scale(1);
             }
             
-            .pack-card.featured:hover {
-                transform: scale(1) translateY(-10px);
+            .pricing-card.featured:hover {
+                transform: translateY(-10px);
             }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 400px;
+                height: 100vh;
+                background: rgba(248, 248, 248, 0.98);
+                backdrop-filter: blur(30px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2.5rem;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+                list-style: none;
+                display: flex;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.3rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .why-section {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 5rem 5% 3rem;
+            }
+
+            .pricing-card {
+                padding: 1.5rem;
+            }
+
+            .section {
+                padding: 3rem 5%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-transition {
+            animation: pageLoad 0.6s ease;
+        }
+
+        @keyframes pageLoad {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>
-    <header class="header">
-        <nav class="nav">
+<body class="page-transition">
+    <div class="loader" id="loader">
+        <img src="logod.jpg" alt="Loading" class="loader-logo">
+    </div>
+
+    <nav class="nav" id="nav">
+        <div class="nav-container">
             <a href="index.html" class="nav-logo">
                 <img src="logod.jpg" alt="Virtual Glow">
                 <span>Virtual Glow</span>
             </a>
-            <div class="nav-links">
-                <a href="index.html">Inicio</a>
-                <a href="instagram.html">Instagram</a>
-                <a href="tiktok.html" class="active">TikTok</a>
-                <a href="business.html">Business</a>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="instagram.html">Instagram</a></li>
+                <li><a href="tiktok.html" class="active">TikTok</a></li>
+                <li><a href="business.html">Business</a></li>
+            </ul>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-        </nav>
-    </header>
-    
-    <section class="hero-section">
-        <h1>🎵 TikTok</h1>
-        <p>Domina el juego del contenido viral. Estrategias probadas para hacer explotar tu cuenta y convertir views en ventas. 🚀</p>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">🎵 TikTok Viral</span>
+            <h1>Domina el <span>Algoritmo</span></h1>
+            <p>Estrategias probadas para crear contenido viral que convierte views en ventas reales.</p>
+        </div>
     </section>
-    
-    <div class="container">
-        <h2 class="section-title">Packs TikTok Viral</h2>
-        
-        <div class="packs-grid">
-            <div class="pack-card">
-                <h3 class="pack-name">TikTok Mini</h3>
-                <p class="pack-subtitle">El impulso inicial que necesitas para despegar</p>
-                <ul class="pack-features">
+
+    <section class="section">
+        <div class="section-header fade-in">
+            <span class="section-tag">Viral Packs</span>
+            <h2 class="section-title">Packs TikTok Viral</h2>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card fade-in">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">TikTok Mini</h3>
+                    <p class="pricing-desc">El impulso inicial que necesitas para despegar</p>
+                </div>
+                <ul class="pricing-features">
                     <li>Optimización estratégica de bio</li>
                     <li>Auditoría rápida del perfil (qué arreglar YA)</li>
                     <li>12 ideas de videos virales personalizadas</li>
                     <li>5 hooks que paran el scroll</li>
                     <li>Guía rápida: cómo grabar con tu celular (beauty edition)</li>
                 </ul>
-                <div class="pack-footer">
+                <div class="pricing-footer">
                     <a href="#" class="btn-primary">Quiero Viralizar</a>
                 </div>
             </div>
-            
-            <div class="pack-card">
-                <h3 class="pack-name">TikTok Plus</h3>
-                <p class="pack-subtitle">Estrategia completa para crecimiento constante</p>
-                <ul class="pack-features">
+
+            <div class="pricing-card fade-in">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">TikTok Plus</h3>
+                    <p class="pricing-desc">Estrategia completa para crecimiento constante</p>
+                </div>
+                <ul class="pricing-features">
                     <li>Todo lo del Mini</li>
                     <li>Calendario de contenido de 14 días</li>
                     <li>12 hooks virales adicionales (total 17)</li>
                     <li>6 captions optimizados para conversión</li>
-                    <li>6 ideas de tendencias adaptadas a su nicho</li>
+                    <li>6 ideas de tendencias adaptadas a tu nicho</li>
                     <li>Guía: estructura de video que retiene (HOOK–VALOR–CTA)</li>
                     <li>Checklist: errores que matan el alcance</li>
                 </ul>
-                <div class="pack-footer">
+                <div class="pricing-footer">
                     <a href="#" class="btn-primary">Quiero Viralizar</a>
                 </div>
             </div>
-            
-            <div class="pack-card featured">
-                <div class="pack-badge">Viral Pro</div>
-                <h3 class="pack-name">TikTok Full</h3>
-                <p class="pack-subtitle">La fórmula completa para ser TikTok famoso</p>
-                <ul class="pack-features">
+
+            <div class="pricing-card featured fade-in">
+                <div class="popular-badge">Viral Pro</div>
+                <div class="pricing-header">
+                    <h3 class="pricing-name">TikTok Full</h3>
+                    <p class="pricing-desc">La fórmula completa para ser TikTok famoso</p>
+                </div>
+                <ul class="pricing-features">
                     <li>Todo lo del Plus</li>
                     <li>Calendario de contenido de 30 días</li>
                     <li>25 hooks virales de alto impacto</li>
                     <li>12 captions listos para copiar y pegar</li>
-                    <li>Estrategia personalizada según su negocio</li>
+                    <li>Estrategia personalizada según tu negocio</li>
                     <li>Auditoría profunda del perfil</li>
                     <li>Banco de sonidos virales actualizados</li>
                     <li>5 ideas de contenido tipo "agenda llena"</li>
                     <li>Plan de crecimiento de 30 días</li>
                     <li>Soporte por 7 días por DM/email</li>
                 </ul>
-                <div class="pack-footer">
+                <div class="pricing-footer">
                     <a href="#" class="btn-primary">Quiero Viralizar</a>
                 </div>
             </div>
         </div>
-        
-        <div class="viral-section">
-            <h3 class="viral-title">🔥 ¿Por qué TikTok con Virtual Glow?</h3>
-            <div class="viral-grid">
-                <div class="viral-item">
+
+        <div class="stats-section fade-in">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500%</div>
+                    <div class="stat-label">Incremento promedio de views</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label">Views generados para clientes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Cuentas virales creadas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24h</div>
+                    <div class="stat-label">Para primer video viral</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="why-section fade-in">
+            <h3 class="why-title">¿Por qué TikTok con Virtual Glow?</h3>
+            <div class="why-grid">
+                <div class="why-item">
                     <h4>🎯 Estrategia Data-Driven</h4>
                     <p>Analizamos tendencias reales y algoritmos para maximizar tu alcance</p>
                 </div>
-                <div class="viral-item">
+                <div class="why-item">
                     <h4>⚡ Contenido Rápido</h4>
-                    <p>Ideas que se hacen en minutos, no en horas. Eficiencia viral</p>
+                    <p>Ideas que se ejecutan en minutos, no en horas. Eficiencia viral.</p>
                 </div>
-                <div class="viral-item">
+                <div class="why-item">
                     <h4>💎 Nicho Específico</h4>
-                    <p>Adaptamos cada estrategia a tu industria y público objetivo</p>
+                    <p>Cada estrategia adaptada a tu industria y público objetivo</p>
                 </div>
-                <div class="viral-item">
-                    <h4>🔄 Actualización Constante</h4>
+                <div class="why-item">
+                    <h4>🔄 Siempre Actualizado</h4>
                     <p>Sonidos y tendencias actualizadas semanalmente</p>
                 </div>
             </div>
         </div>
-        
-        <div class="stats-section">
-            <div class="stat-card">
-                <div class="stat-number">500%</div>
-                <div class="stat-label">Incremento promedio de views</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">10M+</div>
-                <div class="stat-label">Views generados para clientes</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Cuentas virales creadas</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">24h</div>
-                <div class="stat-label">Tiempo promedio para primer viral</div>
-            </div>
-        </div>
-        
-        <section class="cta-section">
-            <h2>🚀 ¿Listo para hacer TikTok tu mejor vendedor?</h2>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>¿Listo para hacer TikTok tu mejor vendedor?</h2>
             <p>El algoritmo favorece a quienes empiezan hoy. No mañana.</p>
-            <a href="#" class="btn-large">Empezar Ahora</a>
-        </section>
-    </div>
-    
+            <a href="#" class="btn-large">Empezar Ahora 🚀</a>
+        </div>
+    </section>
+
     <footer>
         <p>&copy; 2025 Virtual Glow. Todos los derechos reservados.</p>
     </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 600);
+        });
+
+        // Nav scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Intersection Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
