@@ -1,0 +1,280 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Glow - Agencia de Contenido Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,182,193,0.3) 0%, transparent 70%);
+            top: 10%;
+            left: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,105,180,0.2) 0%, transparent 70%);
+            bottom: 20%;
+            right: 10%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+        
+        .logo-container {
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3); }
+            to { box-shadow: 0 10px 40px rgba(219, 112, 147, 0.6), 0 0 60px rgba(255, 182, 193, 0.4); }
+        }
+        
+        .brand-name {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #db7093 0%, #ff69b4 50%, #db7093 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            color: #8b4513;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .platforms {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .platform-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 280px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .platform-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .platform-card:hover::before {
+            left: 100%;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(219, 112, 147, 0.2);
+        }
+        
+        .platform-card.instagram:hover {
+            border-color: #e1306c;
+            box-shadow: 0 20px 40px rgba(225, 48, 108, 0.3);
+        }
+        
+        .platform-card.tiktok:hover {
+            border-color: #000000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .platform-card.business:hover {
+            border-color: #db7093;
+            box-shadow: 0 20px 40px rgba(219, 112, 147, 0.3);
+        }
+        
+        .platform-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .platform-card.instagram .platform-icon {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .platform-card.tiktok .platform-icon {
+            color: #000;
+            text-shadow: 2px 2px 0px #25f4ee, -2px -2px 0px #fe2c55;
+        }
+        
+        .platform-card.business .platform-icon {
+            color: #db7093;
+        }
+        
+        .platform-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .platform-desc {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .sparkles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .sparkle {
+            position: absolute;
+            color: #ffd700;
+            animation: sparkle 3s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes sparkle {
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0) rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .brand-name {
+                font-size: 2.5rem;
+            }
+            .platform-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sparkles" id="sparkles"></div>
+    
+    <section class="hero">
+        <div class="logo-container">
+            <img src="logod.jpg" alt="Virtual Glow Logo">
+        </div>
+        
+        <h1 class="brand-name">Virtual Glow</h1>
+        <p class="tagline">✨ Transformamos tu presencia digital en algo brillante. Elige tu plataforma y comienza a brillar. ✨</p>
+        
+        <div class="platforms">
+            <a href="instagram.html" class="platform-card instagram">
+                <div class="platform-icon">📸</div>
+                <h3 class="platform-name">Instagram</h3>
+                <p class="platform-desc">Feed aesthetic, stories que venden y reels virales. Eleva tu marca al siguiente nivel.</p>
+            </a>
+            
+            <a href="tiktok.html" class="platform-card tiktok">
+                <div class="platform-icon">🎵</div>
+                <h3 class="platform-name">TikTok</h3>
+                <p class="platform-desc">Contenido viral, tendencias adaptadas y estrategias de crecimiento acelerado.</p>
+            </a>
+            
+            <a href="business.html" class="platform-card business">
+                <div class="platform-icon">💼</div>
+                <h3 class="platform-name">Business</h3>
+                <p class="platform-desc">Soluciones integrales para emprendedores y empresas que quieren destacar.</p>
+            </a>
+        </div>
+    </section>
+    
+    <script>
+        // Generar sparkles aleatorios
+        function createSparkles() {
+            const container = document.getElementById('sparkles');
+            const symbols = ['✨', '⭐', '💫', '🌟'];
+            
+            setInterval(() => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                sparkle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                container.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 5000);
+            }, 800);
+        }
+        
+        createSparkles();
+    </script>
+</body>
+</html>
