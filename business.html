@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Business Solutions | Virtual Glow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --business-brown: #8b4513;
+            --business-gold: #d4af37;
+            --business-rose: #db7093;
+            --dark: #1a1a2e;
+            --light: #fff9f0;
+            --white: #ffffff;
+            --gradient-business: linear-gradient(135deg, #8b4513 0%, #db7093 100%);
+            --shadow-soft: 0 20px 60px rgba(139, 69, 19, 0.15);
+            --shadow-strong: 0 30px 80px rgba(139, 69, 19, 0.25);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--dark); overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+        .loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s; }
+        .loader.hidden { opacity: 0; visibility: hidden; }
+        .loader-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .nav { position: fixed; top: 0; width: 100%; padding: 1.5rem 5%; background: rgba(255, 249, 240, 0.95); backdrop-filter: blur(20px); z-index: 1000; transition: all 0.4s ease; border-bottom: 1px solid rgba(139, 69, 19, 0.1); }
+        .nav.scrolled { padding: 1rem 5%; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+        .nav-logo img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3); }
+        .nav-logo span { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 3rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; position: relative; padding: 0.5rem 0; transition: color 0.3s; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--gradient-business); transition: width 0.3s; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover, .nav-links a.active { color: var(--business-brown); }
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 10px; }
+        .menu-toggle span { width: 28px; height: 2px; background: var(--business-brown); transition: all 0.3s; border-radius: 2px; }
+
+        .hero { margin-top: 80px; padding: 6rem 5%; text-align: center; background: linear-gradient(135deg, rgba(139, 69, 19, 0.05) 0%, rgba(219, 112, 147, 0.05) 100%); }
+        .hero-badge { display: inline-block; padding: 0.5rem 1.5rem; background: var(--gradient-business); color: white; border-radius: 50px; font-size: 0.9rem; font-weight: 600; margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(139, 69, 19, 0.3); }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--dark); margin-bottom: 1rem; }
+        .hero h1 span { background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: clamp(1.1rem, 2vw, 1.3rem); color: #666; max-width: 700px; margin: 0 auto; }
+
+        .section { padding: 5rem 5%; max-width: 1400px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-tag { display: inline-block; padding: 0.4rem 1.2rem; background: rgba(139, 69, 19, 0.1); color: var(--business-brown); border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); color: var(--dark); margin-bottom: 1rem; }
+
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
+        .service-card { background: var(--white); border-radius: 24px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
+        .service-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient-business); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+        .service-card:hover::before { transform: scaleX(1); }
+        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-strong); border-color: rgba(139, 69, 19, 0.2); }
+        .service-icon { width: 70px; height: 70px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(219, 112, 147, 0.1)); transition: all 0.3s; }
+        .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); background: var(--gradient-business); }
+        .service-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--business-brown); margin-bottom: 1rem; }
+        .service-desc { color: #666; margin-bottom: 1.5rem; line-height: 1.7; }
+        .service-features { list-style: none; }
+        .service-features li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; color: #555; font-size: 0.95rem; }
+        .service-features li::before { content: '▸'; position: absolute; left: 0; color: var(--business-rose); font-weight: 700; }
+
+        .consulting-section { background: var(--white); border-radius: 24px; padding: 4rem; box-shadow: var(--shadow-soft); display: grid; grid-template-columns: 1.5fr 1fr; gap: 4rem; align-items: center; margin-bottom: 4rem; position: relative; overflow: hidden; }
+        .consulting-content { position: relative; z-index: 1; }
+        .consulting-content h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--business-brown); margin-bottom: 1.5rem; }
+        .consulting-content > p { color: #666; margin-bottom: 1rem; line-height: 1.8; }
+        .consulting-list { list-style: none; margin: 2rem 0; }
+        .consulting-list li { padding: 1rem; margin-bottom: 0.5rem; background: rgba(139, 69, 19, 0.05); border-radius: 12px; padding-left: 3rem; position: relative; transition: all 0.3s; }
+        .consulting-list li:hover { background: rgba(139, 69, 19, 0.1); transform: translateX(5px); }
+        .consulting-list li::before { content: '💡'; position: absolute; left: 1rem; }
+        .btn-primary { display: inline-block; padding: 1rem 2.5rem; background: var(--gradient-business); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139, 69, 19, 0.4); }
+        .consulting-visual { text-align: center; position: relative; z-index: 1; background: linear-gradient(135deg, rgba(139, 69, 19, 0.05), rgba(219, 112, 147, 0.05)); border-radius: 20px; padding: 3rem 2rem; }
+        .consulting-icon { font-size: 5rem; margin-bottom: 1rem; }
+        .price-label { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .price-tag { font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 700; background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+        .price-note { color: #888; font-size: 0.9rem; }
+
+        .process-section { margin-bottom: 4rem; }
+        .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 3rem; }
+        .process-step { text-align: center; padding: 2rem; position: relative; background: var(--white); border-radius: 20px; box-shadow: var(--shadow-soft); }
+        .process-step:not(:last-child)::after { content: '→'; position: absolute; right: -1.5rem; top: 50%; transform: translateY(-50%); font-size: 2rem; color: var(--business-rose); opacity: 0.3; }
+        .step-number { width: 70px; height: 70px; background: var(--gradient-business); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(139, 69, 19, 0.3); }
+        .step-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--business-brown); margin-bottom: 0.5rem; }
+        .step-desc { color: #666; font-size: 0.9rem; }
+
+        .industries-section { background: var(--white); border-radius: 24px; padding: 3rem; box-shadow: var(--shadow-soft); margin-bottom: 4rem; }
+        .industries-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; text-align: center; }
+        .industry-item { padding: 1.5rem 1rem; background: rgba(139, 69, 19, 0.05); border-radius: 16px; transition: all 0.3s; }
+        .industry-item:hover { background: var(--gradient-business); color: white; transform: translateY(-3px); }
+        .industry-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        .cta-section { padding: 6rem 5%; text-align: center; background: linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(219, 112, 147, 0.1) 100%); border-radius: 24px; }
+        .btn-large { display: inline-block; padding: 1.3rem 4rem; background: var(--gradient-business); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 10px 30px rgba(139, 69, 19, 0.4); }
+        .btn-large:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(139, 69, 19, 0.5); }
+
+        footer { text-align: center; padding: 3rem 5%; color: #888; border-top: 1px solid rgba(139, 69, 19, 0.2); font-size: 0.9rem; margin-top: 4rem; }
+
+        @media (max-width: 1024px) { .consulting-section { grid-template-columns: 1fr; gap: 3rem; } .process-grid { grid-template-columns: repeat(2, 1fr); } .process-step:not(:last-child)::after { display: none; } }
+        @media (max-width: 768px) { .menu-toggle { display: flex; } .nav-links { position: fixed; top: 0; right: -100%; width: 80%; max-width: 400px; height: 100vh; background: rgba(255, 249, 240, 0.98); backdrop-filter: blur(30px); flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem; transition: right 0.4s; box-shadow: -10px 0 40px rgba(0,0,0,0.1); list-style: none; display: flex; } .nav-links.active { right: 0; } .services-grid { grid-template-columns: 1fr; } .consulting-section { padding: 2rem; } .process-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader"><img src="logod.jpg" alt="Loading" class="loader-logo"></div>
+
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logod.jpg" alt="Virtual Glow">
+                <span>Virtual Glow</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="instagram.html">Instagram</a></li>
+                <li><a href="tiktok.html">TikTok</a></li>
+                <li><a href="business.html" class="active">Business</a></li>
+            </ul>
+            <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <span class="hero-badge">💼 Business Solutions</span>
+        <h1>Estrategias para <span>Empresas</span></h1>
+        <p>Soluciones integrales para emprendedores y empresas que quieren destacar en el mundo digital y escalar sus resultados.</p>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <span class="section-tag">Servicios</span>
+            <h2 class="section-title">Soluciones Profesionales</h2>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <h3 class="service-name">Estrategia de Marca</h3>
+                <p class="service-desc">Construimos la identidad digital de tu negocio desde cero o la renovamos para el mercado actual.</p>
+                <ul class="service-features">
+                    <li>Definición de identidad de marca digital</li>
+                    <li>Posicionamiento estratégico</li>
+                    <li>Manual de marca para redes sociales</li>
+                    <li>Análisis de competencia detallado</li>
+                    <li>Propuesta de valor única (UVP)</li>
+                    <li>Voice & tone guide</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3 class="service-name">Marketing Digital Integral</h3>
+                <p class="service-desc">Campañas coordinadas en múltiples plataformas para maximizar tu ROI.</p>
+                <ul class="service-features">
+                    <li>Gestión de redes sociales empresariales</li>
+                    <li>Campañas de email marketing automatizadas</li>
+                    <li>Estrategias de contenido B2B y B2C</li>
+                    <li>Automatización de marketing (funnels)</li>
+                    <li>Reportes de analytics mensuales</li>
+                    <li>A/B testing de creativos</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🛒</div>
+                <h3 class="service-name">E-commerce & Ventas</h3>
+                <p class="service-desc">Optimizamos tu embudo de ventas digital para convertir seguidores en clientes.</p>
+                <ul class="service-features">
+                    <li>Optimización de perfiles comerciales</li>
+                    <li>Estrategias de venta directa en redes</li>
+                    <li>Catálogos digitales interactivos</li>
+                    <li>Embudos de conversión optimizados</li>
+                    <li>Retargeting y remarketing estratégico</li>
+                    <li>WhatsApp Business API integración</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3 class="service-name">Diseño & Producción</h3>
+                <p class="service-desc">Assets visuales profesionales que comunican la calidad de tu marca.</p>
+                <ul class="service-features">
+                    <li>Diseño de identidad visual completa</li>
+                    <li>Material publicitario digital</li>
+                    <li>Edición de video profesional</li>
+                    <li>Fotografía de producto (dirección)</li>
+                    <li>Templates editables para equipo</li>
+                    <li>Brand guidelines completos</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📚</div>
+                <h3 class="service-name">Capacitación & Workshops</h3>
+                <p class="service-desc">Empoderamos a tu equipo con las habilidades del marketing moderno.</p>
+                <ul class="service-features">
+                    <li>Talleres de contenido para equipos</li>
+                    <li>Capacitación en herramientas (Canva, etc)</li>
+                    <li>Estrategias de community management</li>
+                    <li>Mejores prácticas por plataforma</li>
+                    <li>Material de consulta permanente</li>
+                    <li>Sesiones de Q&A mensuales</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3 class="service-name">Lanzamientos & Campañas</h3>
+                <p class="service-desc">Estrategias de lanzamiento que generan buzz y ventas desde el día uno.</p>
+                <ul class="service-features">
+                    <li>Estrategia de pre-lanzamiento</li>
+                    <li>Campañas de lanzamiento 360°</li>
+                    <li>Colaboraciones con influencers</li>
+                    <li>Eventos digitales y lives</li>
+                    <li>Análisis post-campaña</li>
+                    <li>Secuencias de email de lanzamiento</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="consulting-section">
+            <div class="consulting-content">
+                <h3>Consultoría 1:1 Premium</h3>
+                <p>Sesiones personalizadas para dueños de negocio que necesitan una estrategia a medida y acompañamiento directo.</p>
+                <p>Ideal para empresas en crecimiento, lanzamientos importantes o rebranding completo.</p>
+                
+                <ul class="consulting-list">
+                    <li>Sesión diagnóstico de 90 minutos</li>
+                    <li>Plan de acción personalizado entregable</li>
+                    <li>2 sesiones de seguimiento</li>
+                    <li>Acceso directo por WhatsApp por 30 días</li>
+                    <li>Revisión de materiales y copy</li>
+                </ul>
+                
+                <a href="mailto:virtualglowservicesd@gmail.com?subject=Consultoria%201:1%20Premium" class="btn-primary">Agendar Consultoría</a>
+            </div>
+            
+            <div class="consulting-visual">
+                <div class="consulting-icon">👩‍💼</div>
+                <div class="price-label">Inversión</div>
+                <div class="price-tag">$997</div>
+                <div class="price-note">o 2 pagos de $525</div>
+            </div>
+        </div>
+
+        <div class="industries-section">
+            <div class="section-header" style="margin-bottom: 2rem;">
+                <span class="section-tag">Especialidades</span>
+                <h2 class="section-title">Industrias que servimos</h2>
+            </div>
+            <div class="industries-grid">
+                <div class="industry-item"><div class="industry-icon">💄</div><div>Belleza</div></div>
+                <div class="industry-item"><div class="industry-icon">👗</div><div>Moda</div></div>
+                <div class="industry-item"><div class="industry-icon">🍽️</div><div>Restaurantes</div></div>
+                <div class="industry-item"><div class="industry-icon">💪</div><div>Fitness</div></div>
+                <div class="industry-item"><div class="industry-icon">🏠</div><div>Real Estate</div></div>
+                <div class="industry-item"><div class="industry-icon">📚</div><div>Educación</div></div>
+                <div class="industry-item"><div class="industry-icon">⚖️</div><div>Servicios Profesionales</div></div>
+                <div class="industry-item"><div class="industry-icon">🛍️</div><div>E-commerce</div></div>
+            </div>
+        </div>
+
+        <div class="process-section">
+            <div class="section-header">
+                <span class="section-tag">Proceso</span>
+                <h2 class="section-title">Cómo Trabajamos</h2>
+            </div>
+            
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Descubrimiento</h4>
+                    <p class="step-desc">Analizamos tu negocio, competencia y objetivos en profundidad</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Estrategia</h4>
+                    <p class="step-desc">Diseñamos un plan de acción con KPIs claros y medibles</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Ejecución</h4>
+                    <p class="step-desc">Implementamos tácticas con reportes semanales de avance</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Optimización</h4>
+                    <p class="step-desc">Analizamos, ajustamos y escalamos resultados continuamente</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div>
+            <h2>¿Lista para llevar tu negocio al siguiente nivel?</h2>
+            <p style="color: #666; margin-bottom: 2rem;">Agenda una llamada gratuita de 15 minutos para evaluar cómo podemos ayudarte.</p>
+            <a href="mailto:virtualglowservicesd@gmail.com?subject=Consulta%20Business%20-%20Llamada%20gratuita" class="btn-large">Agendar Llamada Gratis</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Virtual Glow. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 600);
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
