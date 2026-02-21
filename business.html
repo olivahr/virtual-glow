@@ -104,6 +104,121 @@
 
         @media (max-width: 1024px) { .consulting-section { grid-template-columns: 1fr; gap: 3rem; } .process-grid { grid-template-columns: repeat(2, 1fr); } .process-step:not(:last-child)::after { display: none; } }
         @media (max-width: 768px) { .menu-toggle { display: flex; } .nav-links { position: fixed; top: 0; right: -100%; width: 80%; max-width: 400px; height: 100vh; background: rgba(255, 249, 240, 0.98); backdrop-filter: blur(30px); flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem; transition: right 0.4s; box-shadow: -10px 0 40px rgba(0,0,0,0.1); list-style: none; display: flex; } .nav-links.active { right: 0; } .services-grid { grid-template-columns: 1fr; } .consulting-section { padding: 2rem; } .process-grid { grid-template-columns: 1fr; } }
+      /* Prevenir zoom en móviles */
+    html, body {
+      touch-action: manipulation;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    
+    /* Menú mobile cute con toque dorado/marrón */
+    .nav-links {
+      background: rgba(255, 249, 240, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    
+    .nav-links::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(180deg, rgba(139, 69, 19, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    
+    .nav-links a {
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      background: rgba(139, 69, 19, 0.15);
+      color: var(--business-brown);
+      transform: translateX(10px);
+    }
+    
+    .nav-links a.active {
+      background: var(--gradient-business);
+      color: white !important;
+      box-shadow: 0 5px 20px rgba(139, 69, 19, 0.4);
+    }
+    
+    .nav-links.active {
+      box-shadow: -10px 0 40px rgba(139, 69, 19, 0.2), 
+                  inset 0 0 60px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Footer cute elegante */
+    footer {
+      background: linear-gradient(135deg, rgba(139, 69, 19, 0.05) 0%, rgba(219, 112, 147, 0.05) 100%);
+      position: relative;
+    }
+    
+    footer::before {
+      content: '💼';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5rem;
+      opacity: 0.1;
+    }
+    
+    /* Efecto premium en cards */
+    .service-card {
+      position: relative;
+    }
+    
+    .service-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 2px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), transparent, rgba(219, 112, 147, 0.3));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    
+    .service-card:hover::after {
+      opacity: 1;
+    }
+    
+    /* Industrias con brillo */
+    .industry-item {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .industry-item::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    
+    .industry-item:hover::before {
+      opacity: 1;
+    }
+    
+    /* Precio con brillo dorado */
+    .price-tag {
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+    }
+    
     </style>
 </head>
 <body>
