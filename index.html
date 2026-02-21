@@ -178,6 +178,98 @@
       .social-links{flex-direction:column;align-items:center}
       .platform-name-vertical{font-size:1.5rem}
     }
+     /* Prevenir zoom en móviles */
+    html, body {
+      touch-action: manipulation;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    
+    /* Menú mobile cute */
+    .nav-links {
+      background: rgba(255, 245, 247, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    
+    .nav-links::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(180deg, rgba(219, 112, 147, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    
+    .nav-links li {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .nav-links a {
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      background: rgba(219, 112, 147, 0.15);
+      color: var(--primary);
+      transform: translateX(10px);
+    }
+    
+    .nav-links a.active {
+      background: var(--gradient-1);
+      color: white !important;
+      box-shadow: 0 5px 20px rgba(219, 112, 147, 0.4);
+    }
+    
+    /* Efecto glass cute en menú */
+    .nav-links.active {
+      box-shadow: -10px 0 40px rgba(219, 112, 147, 0.2), 
+                  inset 0 0 60px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Footer cute */
+    footer {
+      background: linear-gradient(135deg, rgba(219, 112, 147, 0.05) 0%, rgba(255, 182, 193, 0.05) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    footer::before {
+      content: '✨';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 3rem;
+      opacity: 0.1;
+    }
+    
+    /* Animación suave al cargar */
+    .platform-card-vertical {
+      animation: float-card 6s ease-in-out infinite;
+    }
+    
+    .platform-card-vertical:nth-child(2) {
+      animation-delay: -2s;
+    }
+    
+    .platform-card-vertical:nth-child(3) {
+      animation-delay: -4s;
+    }
+    
+    @keyframes float-card {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    .platform-card-vertical:hover {
+      animation-play-state: paused;
+    }
   </style>
 </head>
 
