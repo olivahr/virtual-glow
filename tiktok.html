@@ -112,6 +112,94 @@
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr; } }
+       /* Prevenir zoom en móviles */
+    html, body {
+      touch-action: manipulation;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    
+    /* Menú mobile cute con toque cyan/rosa */
+    .nav-links {
+      background: rgba(248, 248, 248, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    
+    .nav-links::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(180deg, rgba(37, 244, 238, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    
+    .nav-links a {
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      background: rgba(37, 244, 238, 0.15);
+      color: var(--tiktok-cyan);
+      transform: translateX(10px);
+    }
+    
+    .nav-links a.active {
+      background: var(--gradient-tiktok);
+      color: white !important;
+      box-shadow: 0 5px 20px rgba(254, 44, 85, 0.4);
+    }
+    
+    .nav-links.active {
+      box-shadow: -10px 0 40px rgba(37, 244, 238, 0.2), 
+                  inset 0 0 60px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Footer cute */
+    footer {
+      background: linear-gradient(135deg, rgba(37, 244, 238, 0.05) 0%, rgba(254, 44, 85, 0.05) 100%);
+      position: relative;
+    }
+    
+    footer::before {
+      content: '🎵';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5rem;
+      opacity: 0.1;
+    }
+    
+    /* Efecto glitch cute en hover */
+    .pricing-card:hover .pricing-name {
+      animation: glitch 0.3s ease;
+    }
+    
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+    
+    /* Stats animados */
+    .stat-number {
+      animation: pulse-number 3s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-number {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
     </style>
 </head>
 <body>
