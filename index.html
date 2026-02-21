@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>Virtual Glow | Agencia de Contenido Digital Premium</title>
+  <meta name="description" content="Agencia de marketing digital para Instagram, TikTok y negocios. Estrategias que convierten." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --primary:#db7093; --primary-dark:#c71585; --secondary:#ffb6c1; --accent:#ff69b4;
+      --dark:#1a1a2e; --light:#fff5f7; --white:#ffffff;
+      --gradient-1:linear-gradient(135deg,#db7093 0%,#ff69b4 50%,#ffb6c1 100%);
+      --gradient-2:linear-gradient(45deg,#ff69b4,#db7093);
+      --shadow-soft:0 10px 30px rgba(219,112,147,.15);
+      --shadow-strong:0 20px 40px rgba(219,112,147,.25);
+      --glass:rgba(255,255,255,.85);
+    }
+    html{scroll-behavior:smooth;font-size:16px;}
+    body{
+      font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);
+      overflow-x:hidden;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Loader */
+    .loader{position:fixed;inset:0;background:var(--light);display:flex;justify-content:center;align-items:center;z-index:9999;transition:opacity .6s ease,visibility .6s}
+    .loader.hidden{opacity:0;visibility:hidden}
+    .loader-logo{width:100px;height:100px;border-radius:50%;background:url('logod.jpg') center/cover no-repeat;animation:pulse 2s ease-in-out infinite;box-shadow:0 0 60px rgba(219,112,147,.4)}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.8}}
+
+    /* Nav */
+    .nav{position:fixed;top:0;left:0;width:100%;padding:1rem 5%;background:rgba(255,245,247,.95);
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;transition:all .3s ease;
+      border-bottom:1px solid rgba(219,112,147,.1)}
+    .nav.scrolled{padding:.7rem 5%;background:rgba(255,245,247,.98);box-shadow:0 5px 20px rgba(0,0,0,.05)}
+    .nav-container{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+    .nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+    .nav-logo img{width:45px;height:45px;border-radius:50%;object-fit:cover;box-shadow:0 4px 10px rgba(219,112,147,.3)}
+    .nav-logo span{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+    .nav-links a{text-decoration:none;color:var(--dark);font-weight:500;font-size:.95rem;position:relative;padding:.5rem 0;transition:color .3s;cursor:pointer}
+    .nav-links a::before{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gradient-2);transition:width .3s}
+    .nav-links a:hover::before,.nav-links a.active::before{width:100%}
+    .nav-links a:hover{color:var(--primary)}
+
+    /* Lang */
+    .lang-toggle{display:flex;gap:.3rem;margin-left:.5rem}
+    .lang-btn{background:transparent;border:1px solid var(--primary);color:var(--primary);padding:.2rem .6rem;border-radius:20px;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .3s}
+    .lang-btn.active{background:var(--primary);color:#fff}
+
+    /* Mobile menu */
+    .menu-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:10px;z-index:1001}
+    .menu-toggle span{width:26px;height:2px;background:var(--primary);transition:all .3s;border-radius:2px}
+    .menu-toggle.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    .menu-toggle.active span:nth-child(2){opacity:0}
+    .menu-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}
+
+    /* Hero */
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 5% 3rem;position:relative;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;z-index:0}
+    .orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.3;animation:float-orb 15s infinite ease-in-out}
+    .orb-1{width:300px;height:300px;background:var(--primary);top:5%;left:-10%}
+    .orb-2{width:250px;height:250px;background:var(--secondary);bottom:10%;right:-5%;animation-delay:-5s}
+    .orb-3{width:200px;height:200px;background:var(--accent);top:40%;left:30%;animation-delay:-10s}
+    @keyframes float-orb{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-30px) scale(1.1)}50%{transform:translate(0,30px) scale(.9)}75%{transform:translate(-30px,-15px) scale(1.05)}}
+    .hero-content{position:relative;z-index:1;max-width:900px;animation:fadeInUp 1s ease}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .hero-logo{width:150px;height:150px;border-radius:50%;background:url('logod.jpg') center/cover no-repeat;margin:0 auto 1.5rem;box-shadow:0 15px 40px rgba(219,112,147,.4);animation:scaleIn .8s ease,glow-pulse 3s infinite;border:4px solid rgba(255,255,255,.8)}
+    @keyframes scaleIn{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes glow-pulse{0%,100%{box-shadow:0 15px 40px rgba(219,112,147,.4)}50%{box-shadow:0 25px 60px rgba(219,112,147,.6)}}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:700;background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;line-height:1.2}
+    .hero-subtitle{font-size:clamp(1rem,2.5vw,1.2rem);color:#666;max-width:600px;margin:0 auto 2.5rem}
+    .hero-subtitle span{color:var(--primary);font-weight:600}
+
+    /* Platform cards */
+    .platforms-vertical{display:flex;flex-direction:column;align-items:center;gap:2rem;width:100%;max-width:500px;margin:0 auto}
+    .platform-card-vertical{
+      background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      border-radius:20px;padding:2rem;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,.8);
+      box-shadow:var(--shadow-soft);width:100%;
+      opacity:0;transform:translateY(30px);
+      transition:opacity .8s ease,transform .8s ease,box-shadow .3s;
+    }
+    .platform-card-vertical.visible{opacity:1;transform:translateY(0)}
+    .platform-card-vertical:hover{transform:translateY(-5px) scale(1.02);box-shadow:var(--shadow-strong)}
+    .platform-icon-vertical{width:70px;height:70px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1rem}
+    .platform-card-vertical.instagram .platform-icon-vertical{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+    .platform-card-vertical.tiktok .platform-icon-vertical{background:linear-gradient(135deg,#25f4ee,#000,#fe2c55)}
+    .platform-card-vertical.business .platform-icon-vertical{background:linear-gradient(135deg,#8b4513,#db7093)}
+    .platform-name-vertical{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:.5rem;color:var(--dark)}
+    .platform-desc-vertical{color:#666;font-size:1rem;line-height:1.6;margin-bottom:1rem}
+    .platform-arrow-vertical{display:inline-flex;align-items:center;gap:.5rem;color:var(--primary);font-weight:600;font-size:1rem;transition:gap .3s}
+    .platform-card-vertical:hover .platform-arrow-vertical{gap:1rem}
+
+    /* Testimonials */
+    .testimonials-section{padding:4rem 5%}
+    .section-tag{display:inline-block;padding:.3rem 1rem;background:rgba(219,112,147,.1);color:var(--primary);border-radius:30px;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+    .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.5rem);color:var(--dark);text-align:center;margin-bottom:2.5rem}
+    .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:1200px;margin:0 auto}
+    .testimonial-card{
+      background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:var(--shadow-soft);
+      position:relative;transition:transform .3s,box-shadow .3s;
+    }
+    .testimonial-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-strong)}
+    .testimonial-card::before{content:'"';font-family:'Playfair Display',serif;font-size:4rem;color:rgba(219,112,147,.2);position:absolute;top:-5px;left:15px}
+    .testimonial-text{font-style:italic;color:#555;margin-bottom:1.2rem;position:relative;z-index:1;font-size:.95rem;line-height:1.6}
+    .testimonial-author{font-weight:600;color:var(--primary);margin-bottom:.2rem}
+    .testimonial-location{color:#888;font-size:.8rem}
+    .testimonial-rating{color:gold;margin-bottom:.5rem}
+    .testimonial-service{color:var(--primary);font-size:.75rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;font-weight:600}
+
+    /* Contact */
+    .contact-section{padding:4rem 5%;background:linear-gradient(135deg,rgba(219,112,147,.05) 0%,rgba(255,182,193,.05) 100%)}
+    .contact-container{max-width:700px;margin:0 auto;text-align:center}
+    .contact-info-card{background:var(--white);border-radius:20px;padding:2rem;box-shadow:var(--shadow-soft)}
+    .contact-info-card h3{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--primary);margin-bottom:1.5rem}
+    .contact-detail{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1rem;font-size:1rem}
+    .contact-icon{font-size:1.5rem;width:45px;height:45px;background:rgba(219,112,147,.1);border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .contact-text a{color:var(--primary);text-decoration:none;font-weight:500}
+    .social-links{display:flex;justify-content:center;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+    .social-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.5rem;border-radius:50px;text-decoration:none;font-weight:600;font-size:.9rem;transition:all .3s}
+    .social-btn.instagram{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff}
+    .social-btn.tiktok{background:linear-gradient(135deg,#25f4ee,#000,#fe2c55);color:#fff}
+    .social-btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,.2)}
+    .policies{margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,.1);display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+    .policies a{color:#888;text-decoration:none;cursor:pointer;font-size:.9rem}
+    .policies a:hover{color:var(--primary)}
+
+    /* Modal */
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;justify-content:center;align-items:center}
+    .modal.active{display:flex}
+    .modal-content{background:var(--white);border-radius:20px;padding:2rem;max-width:450px;width:90%;max-height:80vh;overflow-y:auto;position:relative;box-shadow:var(--shadow-strong)}
+    .modal-content h3{font-family:'Playfair Display',serif;color:var(--primary);margin-bottom:1rem}
+    .modal-content p{color:#555;margin-bottom:1rem;line-height:1.6;font-size:.95rem}
+    .close-modal{position:absolute;top:15px;right:15px;font-size:1.5rem;cursor:pointer;color:#888}
+
+    /* Chat - Oculto por defecto, solo se abre desde menú */
+    .chat-container{position:fixed;bottom:20px;right:20px;width:350px;height:500px;background:#fff;border-radius:20px;box-shadow:var(--shadow-strong);
+      display:none;flex-direction:column;overflow:hidden;z-index:1000;border:2px solid var(--primary)}
+    .chat-container.active{display:flex}
+    .chat-header{background:var(--gradient-1);color:#fff;padding:1rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+    .chat-header button{background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer}
+    .chat-messages{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:.8rem}
+    .message{max-width:85%;padding:.8rem 1rem;border-radius:18px;font-size:.9rem;line-height:1.4;word-wrap:break-word}
+    .message.user{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:4px}
+    .message.bot{align-self:flex-start;background:#f0f0f0;color:var(--dark);border-bottom-left-radius:4px}
+    .quick-questions{display:flex;flex-wrap:wrap;gap:.5rem;padding:.8rem;border-top:1px solid rgba(0,0,0,.1);max-height:100px;overflow-y:auto}
+    .quick-question{background:rgba(219,112,147,.1);color:var(--primary);padding:.4rem .8rem;border-radius:20px;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .3s;border:1px solid transparent}
+    .quick-question:hover{background:var(--primary);color:#fff}
+    .chat-input-area{display:flex;padding:.8rem;border-top:1px solid rgba(0,0,0,.1);gap:.5rem}
+    .chat-input-area input{flex:1;padding:.7rem;border:1px solid rgba(219,112,147,.3);border-radius:20px;outline:none;font-family:'Inter',sans-serif;font-size:.9rem}
+    .chat-input-area button{background:var(--gradient-1);border:none;color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+
+    /* Fullscreen chat */
+    .chat-container.fullscreen{top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;border-radius:0;bottom:auto;right:auto;z-index:9999}
+    .chat-container.fullscreen .chat-messages{padding:1rem}
+    .chat-container.fullscreen .quick-questions{padding:1rem;max-height:120px}
+
+    /* Responsive */
+    @media (max-width:768px){
+      .menu-toggle{display:flex}
+      .nav-links{
+        position:fixed;top:0;right:-100%;width:70%;max-width:300px;height:100vh;background:var(--glass);
+        backdrop-filter:blur(15px);flex-direction:column;justify-content:center;align-items:center;gap:1.8rem;
+        transition:right .3s;box-shadow:-5px 0 20px rgba(0,0,0,.1);display:flex;list-style:none
+      }
+      .nav-links.active{right:0}
+      .nav-links a{font-size:1.1rem}
+      .lang-toggle{margin-top:.5rem}
+      .hero-logo{width:120px;height:120px}
+      .hero h1{font-size:2rem}
+      .hero-subtitle{font-size:1rem;margin-bottom:2rem}
+      .chat-container{width:90%;height:70vh;right:5%;bottom:10%}
+      .social-links{flex-direction:column;align-items:center}
+      .platform-name-vertical{font-size:1.5rem}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Loader -->
+  <div class="loader" id="loader"><div class="loader-logo"></div></div>
+
+  <!-- Nav -->
+  <nav class="nav" id="nav">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <img src="logod.jpg" alt="Virtual Glow" />
+        <span>Virtual Glow</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a class="nav-link" data-section="inicio" data-i18n="nav.home">Inicio</a></li>
+        <li><a href="instagram.html" data-i18n="nav.instagram">Instagram</a></li>
+        <li><a href="tiktok.html" data-i18n="nav.tiktok">TikTok</a></li>
+        <li><a href="business.html" data-i18n="nav.business">Business</a></li>
+        <li><a class="nav-link" data-section="testimonios" data-i18n="nav.testimonials">Testimonios</a></li>
+        <li><a class="nav-link" data-section="contacto" data-i18n="nav.contact">Contacto</a></li>
+        <li><a id="openChatMenu" data-i18n="nav.assistant">Asistente Glow</a></li>
+        <li>
+          <div class="lang-toggle">
+            <span class="lang-btn active" data-lang="es">ES</span>
+            <span class="lang-btn" data-lang="en">EN</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="inicio">
+    <div class="hero-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-logo"></div>
+      <h1 data-i18n="hero.title">Virtual Glow</h1>
+      <p class="hero-subtitle" data-i18n="hero.subtitle">
+        Transformamos tu presencia digital en algo <span>brillante</span>. Elige tu plataforma y comienza a brillar con estrategias que convierten.
+      </p>
+
+      <div class="platforms-vertical">
+        <a href="instagram.html" class="platform-card-vertical instagram">
+          <div class="platform-icon-vertical">📸</div>
+          <h3 class="platform-name-vertical" data-i18n="platform.ig">Instagram</h3>
+          <p class="platform-desc-vertical" data-i18n="platform.igDesc">Feed aesthetic, stories que venden y reels virales. Eleva tu marca al siguiente nivel con contenido que enamora.</p>
+          <span class="platform-arrow-vertical" data-i18n="platform.explore">Explorar →</span>
+        </a>
+
+        <a href="tiktok.html" class="platform-card-vertical tiktok">
+          <div class="platform-icon-vertical">🎵</div>
+          <h3 class="platform-name-vertical" data-i18n="platform.tt">TikTok</h3>
+          <p class="platform-desc-vertical" data-i18n="platform.ttDesc">Contenido viral, tendencias adaptadas y estrategias de crecimiento acelerado. Conquista el algoritmo.</p>
+          <span class="platform-arrow-vertical" data-i18n="platform.explore">Explorar →</span>
+        </a>
+
+        <a href="business.html" class="platform-card-vertical business">
+          <div class="platform-icon-vertical">💼</div>
+          <h3 class="platform-name-vertical" data-i18n="platform.biz">Business</h3>
+          <p class="platform-desc-vertical" data-i18n="platform.bizDesc">Soluciones integrales para emprendedores y empresas que quieren destacar y escalar sus resultados.</p>
+          <span class="platform-arrow-vertical" data-i18n="platform.explore">Explorar →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials-section" id="testimonios">
+    <span class="section-tag" data-i18n="testimonials.badge">Testimonios</span>
+    <h2 class="section-title" data-i18n="testimonials.title">Lo que dicen nuestros clientes</h2>
+    <div class="testimonials-grid" id="testimonialsGrid"></div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact-section" id="contacto">
+    <div class="contact-container">
+      <div class="contact-info-card">
+        <h3 data-i18n="contact.title">Contacto</h3>
+
+        <div class="contact-detail">
+          <div class="contact-icon">📧</div>
+          <div class="contact-text">
+            <a href="mailto:virtualglowservicesd@gmail.com">virtualglowservicesd@gmail.com</a>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-icon">📍</div>
+          <div class="contact-text"><span data-i18n="contact.office">Disponible 24/7 online</span></div>
+        </div>
+
+        <div class="social-links">
+          <a href="https://www.instagram.com/virtual_glow_?igsh=cGV4aHhjeGJyeXAz" target="_blank" class="social-btn instagram">📸 Instagram</a>
+          <a href="https://www.tiktok.com/@virtual_glow_?_r=1&_t=ZT-945Zpf81hmf" target="_blank" class="social-btn tiktok">🎵 TikTok</a>
+        </div>
+
+        <div class="policies">
+          <a id="privacyPolicy" data-i18n="contact.privacy">Políticas de privacidad</a>
+          <a id="termsOfUse" data-i18n="contact.terms">Términos de uso</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modals -->
+  <div class="modal" id="privacyModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closePrivacy">&times;</span>
+      <h3 data-i18n="privacy.title">Políticas de Privacidad</h3>
+      <p data-i18n="privacy.text">
+        En Virtual Glow, nos tomamos muy en serio la privacidad de tus datos. Toda la información que nos proporcionas se utiliza únicamente para mejorar nuestros servicios y comunicarnos contigo. No compartimos tus datos con terceros sin tu consentimiento explícito.
+      </p>
+    </div>
+  </div>
+
+  <div class="modal" id="termsModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeTerms">&times;</span>
+      <h3 data-i18n="terms.title">Términos de Uso</h3>
+      <p data-i18n="terms.text">
+        Al utilizar nuestros servicios, aceptas los siguientes términos: Los pagos se procesan a través de Stripe. No realizamos reembolsos después de los primeros 7 días de cada mes. El contenido creado es propiedad de Virtual Glow hasta el pago completo.
+      </p>
+    </div>
+  </div>
+
+  <!-- Chat - Solo se abre desde el menú -->
+  <div class="chat-container" id="chatContainer" aria-label="Chat Virtual Glow">
+    <div class="chat-header">
+      <span>✨ Asistente Glow</span>
+      <div>
+        <button id="toggleChatFull" title="Pantalla completa">⤢</button>
+        <button id="closeChat" title="Cerrar">✕</button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">¡Hola! Soy tu Asistente Glow. Tengo respuestas sobre Instagram, TikTok, Business, precios y más. ¿En qué puedo ayudarte?</div>
+    </div>
+
+    <div class="quick-questions" id="quickQuestions"></div>
+
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Escribe tu pregunta..." />
+      <button id="sendChat" aria-label="Enviar">➤</button>
+    </div>
+  </div>
+
+  <footer style="text-align:center;padding:2rem;color:#888;font-size:.9rem;border-top:1px solid rgba(219,112,147,.2)">
+    <p data-i18n="footer">© 2025 Virtual Glow. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    // Testimonios reales
+    const testimonials = [
+      { 
+        name: 'María Fernández', 
+        location: 'Miami, FL', 
+        rating: 5, 
+        service: 'Instagram Glow Full',
+        textEs: 'Pasé de 1,200 a 15,000 seguidores en 3 meses. Mis ventas aumentaron 240%. El feed se ve increíble y los reels llegan a miles.', 
+        textEn: 'Went from 1,200 to 15,000 followers in 3 months. Sales up 240%. Feed looks incredible and reels reach thousands.' 
+      },
+      { 
+        name: 'Carlos Mendoza', 
+        location: 'Houston, TX', 
+        rating: 5, 
+        service: 'TikTok Full',
+        textEs: 'Mi primer video viral: 2.3M views. Me trajo 47 clientes nuevos en una semana. La estrategia de hooks es oro puro.', 
+        textEn: 'First viral video: 2.3M views. Brought 47 new clients in one week. The hook strategy is pure gold.' 
+      },
+      { 
+        name: 'Ana Lucía Torres', 
+        location: 'Ciudad de México', 
+        rating: 5, 
+        service: 'Instagram Glow Plus',
+        textEs: 'Recuperé la inversión en la primera semana. Los flyers para mi restaurante se ven profesionales y las historias tienen interacción real.', 
+        textEn: 'Made my investment back in the first week. Restaurant flyers look professional and stories have real engagement.' 
+      },
+      { 
+        name: 'Javier Rodríguez', 
+        location: 'Barcelona, España', 
+        rating: 5, 
+        service: 'Business - Consultoría 1:1',
+        textEs: 'La consultoría me ahorró meses de prueba y error. En 30 días aumenté mis precios 50% sin perder clientes.', 
+        textEn: 'Consulting saved me months of trial and error. Raised prices 50% in 30 days without losing clients.' 
+      }
+    ];
+
+    let currentLang = 'es';
+
+    function renderTestimonials(){
+      const grid = document.getElementById('testimonialsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      testimonials.forEach(t => {
+        const stars = '★'.repeat(t.rating) + '☆'.repeat(5 - t.rating);
+        const card = document.createElement('div');
+        card.className = 'testimonial-card';
+        card.innerHTML = `
+          <div class="testimonial-rating">${stars}</div>
+          <div class="testimonial-service">${t.service}</div>
+          <p class="testimonial-text">${currentLang === 'es' ? t.textEs : t.textEn}</p>
+          <p class="testimonial-author">${t.name}</p>
+          <p class="testimonial-location">${t.location}</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Chat knowledge base
+    const knowledgeBase = [
+      { keywords: ['hola','buenos','saludos','hey','hi'], response: '¡Hola! ✨ ¿En qué puedo ayudarte? Pregúntame sobre Instagram, TikTok, Business, precios o cómo empezar.' },
+      { keywords: ['instagram','ig','feed'], response: '📸 Instagram:\n• Glow Mini: $250/mes (3 piezas/semana)\n• Glow Plus: $475/mes (4-5 piezas)\n• Glow Full: $800/mes (6-7 piezas + reel pro)\n\n¿Cuál te interesa?' },
+      { keywords: ['tiktok','viral'], response: '🎵 TikTok (pago único):\n• Mini: $150 (12 ideas + 5 hooks)\n• Plus: $290 (calendario 14 días)\n• Full: $490 (30 días + soporte 7 días)\n\nClientes reportan 10M+ views.' },
+      { keywords: ['business','negocio','consultoria'], response: '💼 Business:\n• Estrategia de Marca: desde $1,500\n• Marketing Digital: desde $1,200/mes\n• Consultoría 1:1: $997 (o 2×$525)\n\n¿Qué necesitas?' },
+      { keywords: ['precio','costo','cuanto'], response: '💰 Precios:\nInstagram: $250-$800/mes\nTikTok: $150-$490 (único)\nBusiness: $997-$1,500+\n\n¿Qué servicio te interesa?' },
+      { keywords: ['contacto','email','escribir'], response: '📧 Escríbenos:\n• Email: virtualglowservicesd@gmail.com\n• Instagram: @virtual_glow_\n• TikTok: @virtual_glow_\n\nRespuesta en 24-48h.' },
+      { keywords: ['empezar','comenzar','proceso'], response: '🚀 Para empezar:\n1. Escríbenos tu nombre y negocio\n2. Te enviamos un brief\n3. Propuesta en 24-48h\n4. ¡Empezamos!\n\n¿Listo?' }
+    ];
+
+    function findResponse(msg){
+      const lower = msg.toLowerCase();
+      for (const item of knowledgeBase){
+        for (const k of item.keywords){
+          if (lower.includes(k)) return item.response;
+        }
+      }
+      return 'Pregúntame sobre Instagram, TikTok, Business, precios o cómo empezar. También puedes escribirnos a virtualglowservicesd@gmail.com ✨';
+    }
+
+    // Chat functions
+    const chatContainer = document.getElementById('chatContainer');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const quickQuestions = document.getElementById('quickQuestions');
+
+    const quickQs = [
+      {es:'¿Cómo empiezo?', en:'How to start?'},
+      {es:'Precios Instagram', en:'Instagram prices'},
+      {es:'TikTok packs', en:'TikTok packs'},
+      {es:'Consultoría Business', en:'Business consulting'},
+      {es:'Contacto', en:'Contact'}
+    ];
+
+    function addMessage(text, sender){
+      const msg = document.createElement('div');
+      msg.className = `message ${sender}`;
+      msg.textContent = text;
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function handleSend(){
+      const text = chatInput.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      chatInput.value = '';
+      setTimeout(() => addMessage(findResponse(text), 'bot'), 300);
+    }
+
+    function renderQuickQs(){
+      quickQuestions.innerHTML = '';
+      quickQs.forEach(q => {
+        const btn = document.createElement('span');
+        btn.className = 'quick-question';
+        btn.textContent = currentLang === 'es' ? q.es : q.en;
+        btn.onclick = () => {
+          addMessage(btn.textContent, 'user');
+          setTimeout(() => addMessage(findResponse(btn.textContent), 'bot'), 300);
+        };
+        quickQuestions.appendChild(btn);
+      });
+    }
+
+    document.getElementById('sendChat').onclick = handleSend;
+    chatInput.onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
+
+    document.getElementById('closeChat').onclick = () => {
+      chatContainer.classList.remove('active');
+      chatContainer.classList.remove('fullscreen');
+    };
+
+    document.getElementById('toggleChatFull').onclick = () => {
+      chatContainer.classList.toggle('fullscreen');
+    };
+
+    document.getElementById('openChatMenu').onclick = (e) => {
+      e.preventDefault();
+      chatContainer.classList.add('active');
+      document.getElementById('navLinks').classList.remove('active');
+      document.getElementById('menuToggle').classList.remove('active');
+      chatInput.focus();
+    };
+
+    // Translations
+    const translations = {
+      es: {
+        'nav.home':'Inicio','nav.instagram':'Instagram','nav.tiktok':'TikTok','nav.business':'Business',
+        'nav.testimonials':'Testimonios','nav.contact':'Contacto','nav.assistant':'Asistente Glow',
+        'hero.title':'Virtual Glow',
+        'hero.subtitle':'Transformamos tu presencia digital en algo <span>brillante</span>. Elige tu plataforma y comienza a brillar con estrategias que convierten.',
+        'platform.ig':'Instagram','platform.igDesc':'Feed aesthetic, stories que venden y reels virales. Eleva tu marca al siguiente nivel con contenido que enamora.',
+        'platform.tt':'TikTok','platform.ttDesc':'Contenido viral, tendencias adaptadas y estrategias de crecimiento acelerado. Conquista el algoritmo.',
+        'platform.biz':'Business','platform.bizDesc':'Soluciones integrales para emprendedores y empresas que quieren destacar y escalar sus resultados.',
+        'platform.explore':'Explorar →',
+        'testimonials.badge':'Testimonios','testimonials.title':'Lo que dicen nuestros clientes',
+        'contact.title':'Contacto','contact.office':'Disponible 24/7 online',
+        'contact.privacy':'Políticas de privacidad','contact.terms':'Términos de uso',
+        'privacy.title':'Políticas de Privacidad',
+        'privacy.text':'En Virtual Glow, nos tomamos muy en serio la privacidad de tus datos. No compartimos tus datos con terceros sin tu consentimiento explícito.',
+        'terms.title':'Términos de Uso',
+        'terms.text':'Al utilizar nuestros servicios, aceptas los siguientes términos: Los pagos se procesan a través de Stripe. No realizamos reembolsos después de los primeros 7 días.',
+        'footer':'© 2025 Virtual Glow. Todos los derechos reservados.'
+      },
+      en: {
+        'nav.home':'Home','nav.instagram':'Instagram','nav.tiktok':'TikTok','nav.business':'Business',
+        'nav.testimonials':'Testimonials','nav.contact':'Contact','nav.assistant':'Glow Assistant',
+        'hero.title':'Virtual Glow',
+        'hero.subtitle':'We transform your digital presence into something <span>brilliant</span>. Choose your platform and start shining with strategies that convert.',
+        'platform.ig':'Instagram','platform.igDesc':'Aesthetic feed, stories that sell and viral reels. Elevate your brand with content that captivates.',
+        'platform.tt':'TikTok','platform.ttDesc':'Viral content, adapted trends, and accelerated growth strategies. Conquer the algorithm.',
+        'platform.biz':'Business','platform.bizDesc':'All-in-one solutions for entrepreneurs and companies that want to stand out and scale results.',
+        'platform.explore':'Explore →',
+        'testimonials.badge':'Testimonials','testimonials.title':'What our clients say',
+        'contact.title':'Contact','contact.office':'Available 24/7 online',
+        'contact.privacy':'Privacy Policy','contact.terms':'Terms of use',
+        'privacy.title':'Privacy Policy',
+        'privacy.text':'At Virtual Glow, we take your privacy seriously. We do not share your data without explicit consent.',
+        'terms.title':'Terms of Use',
+        'terms.text':'By using our services: Payments processed via Stripe. No refunds after first 7 days.',
+        'footer':'© 2025 Virtual Glow. All rights reserved.'
+      }
+    };
+
+    function translatePage(){
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = translations[currentLang][key];
+        if (val) {
+          if (key === 'hero.subtitle') el.innerHTML = val;
+          else el.textContent = val;
+        }
+      });
+      renderTestimonials();
+      renderQuickQs();
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLang = btn.dataset.lang;
+        translatePage();
+      };
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('[data-section]').forEach(el => {
+      el.onclick = (e) => {
+        e.preventDefault();
+        const target = document.getElementById(el.dataset.section);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('navLinks').classList.remove('active');
+        document.getElementById('menuToggle').classList.remove('active');
+      };
+    });
+
+    // Modals
+    document.getElementById('privacyPolicy').onclick = (e) => { e.preventDefault(); document.getElementById('privacyModal').classList.add('active'); };
+    document.getElementById('termsOfUse').onclick = (e) => { e.preventDefault(); document.getElementById('termsModal').classList.add('active'); };
+    document.getElementById('closePrivacy').onclick = () => document.getElementById('privacyModal').classList.remove('active');
+    document.getElementById('closeTerms').onclick = () => document.getElementById('termsModal').classList.remove('active');
+
+    // Mobile menu
+    document.getElementById('menuToggle').onclick = function(){
+      this.classList.toggle('active');
+      document.getElementById('navLinks').classList.toggle('active');
+    };
+
+    // Scroll nav
+    window.onscroll = () => {
+      const nav = document.getElementById('nav');
+      if (window.scrollY > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    };
+
+    // Init
+    window.onload = () => {
+      setTimeout(() => document.getElementById('loader').classList.add('hidden'), 600);
+      document.querySelectorAll('.platform-card-vertical').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 200);
+      });
+      renderTestimonials();
+      renderQuickQs();
+    };
+  </script>
+</body>
+</html>
