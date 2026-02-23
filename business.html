@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Business Solutions | Virtual Glow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --business-primary: #667eea;
+            --business-secondary: #764ba2;
+            --business-accent: #db7093;
+            --dark: #1a1a2e;
+            --light: #f8f7ff;
+            --white: #ffffff;
+            --gradient-business: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #db7093 100%);
+            --shadow-soft: 0 20px 60px rgba(102, 126, 234, 0.15);
+            --shadow-strong: 0 30px 80px rgba(102, 126, 234, 0.25);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--dark); overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+        .loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s; }
+        .loader.hidden { opacity: 0; visibility: hidden; }
+        .loader-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .nav { position: fixed; top: 0; width: 100%; padding: 1.5rem 5%; background: rgba(248, 247, 255, 0.95); backdrop-filter: blur(20px); z-index: 1000; transition: all 0.4s ease; border-bottom: 1px solid rgba(102, 126, 234, 0.1); }
+        .nav.scrolled { padding: 1rem 5%; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+        .nav-logo img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+        .nav-logo span { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 3rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; position: relative; padding: 0.5rem 0; transition: color 0.3s; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--gradient-business); transition: width 0.3s; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover, .nav-links a.active { color: var(--business-primary); }
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 10px; }
+        .menu-toggle span { width: 28px; height: 2px; background: var(--business-primary); transition: all 0.3s; border-radius: 2px; }
+
+        .hero { margin-top: 80px; padding: 6rem 5%; text-align: center; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(219, 112, 147, 0.05) 100%); }
+        .hero-badge { display: inline-block; padding: 0.5rem 1.5rem; background: var(--gradient-business); color: white; border-radius: 50px; font-size: 0.9rem; font-weight: 600; margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--dark); margin-bottom: 1rem; }
+        .hero h1 span { background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: clamp(1.1rem, 2vw, 1.3rem); color: #666; max-width: 700px; margin: 0 auto; }
+
+        .section { padding: 5rem 5%; max-width: 1400px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-tag { display: inline-block; padding: 0.4rem 1.2rem; background: rgba(102, 126, 234, 0.1); color: var(--business-primary); border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); color: var(--dark); margin-bottom: 1rem; }
+
+        /* Pricing Cards */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; margin-bottom: 4rem; }
+        .pricing-card { background: var(--white); border-radius: 24px; padding: 2.5rem; position: relative; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; box-shadow: var(--shadow-soft); overflow: hidden; }
+        .pricing-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient-business); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+        .pricing-card:hover::before { transform: scaleX(1); }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-strong); border-color: rgba(102, 126, 234, 0.2); }
+        .pricing-card.featured { border: 3px solid var(--business-primary); transform: scale(1.05); box-shadow: 0 30px 80px rgba(102, 126, 234, 0.2); }
+        .popular-badge { position: absolute; top: 20px; right: -40px; background: var(--gradient-business); color: white; padding: 0.5rem 3rem; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .pricing-header { margin-bottom: 2rem; text-align: center; }
+        .pricing-name { font-family: 'Playfair Display', serif; font-size: 1.8rem; background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+        .pricing-desc { color: #888; font-size: 0.95rem; font-style: italic; }
+        .pricing-features { list-style: none; margin-bottom: 2rem; }
+        .pricing-features li { padding: 0.8rem 0; padding-left: 2rem; position: relative; color: #555; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+        .pricing-features li::before { content: '✓'; position: absolute; left: 0; width: 24px; height: 24px; background: var(--gradient-business); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+        .pricing-footer { text-align: center; padding-top: 1.5rem; border-top: 2px solid rgba(102, 126, 234, 0.1); }
+        .pricing-price { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+        .pricing-price span { font-size: 1rem; color: #888; font-weight: 400; }
+        .pricing-note { color: #888; font-size: 0.85rem; margin-bottom: 1.5rem; }
+        .btn-primary { display: block; width: 100%; padding: 1rem; background: var(--gradient-business); color: white; text-align: center; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 1rem; transition: all 0.3s; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
+
+        /* Servicios Individuales */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
+        .service-card { background: var(--white); border-radius: 24px; padding: 2rem; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
+        .service-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient-business); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+        .service-card:hover::before { transform: scaleX(1); }
+        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-strong); border-color: rgba(102, 126, 234, 0.2); }
+        .service-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1.2rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(219, 112, 147, 0.1)); transition: all 0.3s; }
+        .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); background: var(--gradient-business); }
+        .service-name { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--business-primary); margin-bottom: 0.8rem; }
+        .service-desc { color: #666; margin-bottom: 1rem; line-height: 1.6; font-size: 0.9rem; }
+        .service-price { font-size: 1.4rem; font-weight: 700; color: var(--business-primary); }
+        .service-price span { font-size: 0.85rem; color: #888; font-weight: 500; }
+
+        .consulting-section { background: var(--white); border-radius: 24px; padding: 4rem; box-shadow: var(--shadow-soft); display: grid; grid-template-columns: 1.5fr 1fr; gap: 4rem; align-items: center; margin-bottom: 4rem; position: relative; overflow: hidden; }
+        .consulting-content { position: relative; z-index: 1; }
+        .consulting-content h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--business-primary); margin-bottom: 1.5rem; }
+        .consulting-content > p { color: #666; margin-bottom: 1rem; line-height: 1.8; }
+        .consulting-list { list-style: none; margin: 2rem 0; }
+        .consulting-list li { padding: 1rem; margin-bottom: 0.5rem; background: rgba(102, 126, 234, 0.05); border-radius: 12px; padding-left: 3rem; position: relative; transition: all 0.3s; }
+        .consulting-list li:hover { background: rgba(102, 126, 234, 0.1); transform: translateX(5px); }
+        .consulting-list li::before { content: '💡'; position: absolute; left: 1rem; }
+        .btn-secondary { display: inline-block; padding: 1rem 2.5rem; background: transparent; color: var(--business-primary); text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s; border: 2px solid var(--business-primary); cursor: pointer; }
+        .btn-secondary:hover { background: var(--gradient-business); color: white; border-color: transparent; }
+        .consulting-visual { text-align: center; position: relative; z-index: 1; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(219, 112, 147, 0.05)); border-radius: 20px; padding: 3rem 2rem; }
+        .consulting-icon { font-size: 5rem; margin-bottom: 1rem; }
+        .price-label { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .price-tag { font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 700; background: var(--gradient-business); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+        .price-note { color: #888; font-size: 0.9rem; }
+
+        .process-section { margin-bottom: 4rem; }
+        .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 3rem; }
+        .process-step { text-align: center; padding: 2rem; position: relative; background: var(--white); border-radius: 20px; box-shadow: var(--shadow-soft); }
+        .process-step:not(:last-child)::after { content: '→'; position: absolute; right: -1.5rem; top: 50%; transform: translateY(-50%); font-size: 2rem; color: var(--business-accent); opacity: 0.3; }
+        .step-number { width: 70px; height: 70px; background: var(--gradient-business); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); }
+        .step-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--business-primary); margin-bottom: 0.5rem; }
+        .step-desc { color: #666; font-size: 0.9rem; }
+
+        .industries-section { background: var(--white); border-radius: 24px; padding: 3rem; box-shadow: var(--shadow-soft); margin-bottom: 4rem; }
+        .industries-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; text-align: center; }
+        .industry-item { padding: 1.5rem 1rem; background: rgba(102, 126, 234, 0.05); border-radius: 16px; transition: all 0.3s; }
+        .industry-item:hover { background: var(--gradient-business); color: white; transform: translateY(-3px); }
+        .industry-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        .cta-section { padding: 6rem 5%; text-align: center; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(219, 112, 147, 0.1) 100%); border-radius: 24px; }
+        .btn-large { display: inline-block; padding: 1.3rem 4rem; background: var(--gradient-business); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
+        .btn-large:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5); }
+
+        footer { text-align: center; padding: 3rem 5%; color: #888; border-top: 1px solid rgba(102, 126, 234, 0.2); font-size: 0.9rem; margin-top: 4rem; }
+
+        @media (max-width: 1024px) { 
+            .consulting-section { grid-template-columns: 1fr; gap: 3rem; } 
+            .process-grid { grid-template-columns: repeat(2, 1fr); } 
+            .process-step:not(:last-child)::after { display: none; }
+            .pricing-card.featured { transform: scale(1); }
+        }
+        @media (max-width: 768px) { 
+            .menu-toggle { display: flex; } 
+            .nav-links { position: fixed; top: 0; right: -100%; width: 80%; max-width: 400px; height: 100vh; background: rgba(248, 247, 255, 0.98); backdrop-filter: blur(30px); flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem; transition: right 0.4s; box-shadow: -10px 0 40px rgba(0,0,0,0.1); list-style: none; display: flex; } 
+            .nav-links.active { right: 0; } 
+            .services-grid { grid-template-columns: 1fr; } 
+            .pricing-grid { grid-template-columns: 1fr; }
+            .consulting-section { padding: 2rem; } 
+            .process-grid { grid-template-columns: 1fr; } 
+        }
+        
+        /* Prevenir zoom en móviles */
+        html, body {
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        /* Menú mobile */
+        .nav-links {
+            background: rgba(248, 247, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .nav-links::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(180deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .nav-links a {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(102, 126, 234, 0.15);
+            color: var(--business-primary);
+            transform: translateX(10px);
+        }
+        
+        .nav-links a.active {
+            background: var(--gradient-business);
+            color: white !important;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-links.active {
+            box-shadow: -10px 0 40px rgba(102, 126, 234, 0.2), 
+                        inset 0 0 60px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(219, 112, 147, 0.05) 100%);
+            position: relative;
+        }
+        
+        footer::before {
+            content: '💼';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            opacity: 0.1;
+        }
+        
+        /* Efecto premium en cards */
+        .service-card, .pricing-card {
+            position: relative;
+        }
+        
+        .service-card::after, .pricing-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), transparent, rgba(219, 112, 147, 0.3));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .service-card:hover::after, .pricing-card:hover::after {
+            opacity: 1;
+        }
+        
+        /* Industrias con brillo */
+        .industry-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .industry-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .industry-item:hover::before {
+            opacity: 1;
+        }
+        
+        /* Precio con brillo */
+        .price-tag, .pricing-price {
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader"><img src="logod.jpg" alt="Loading" class="loader-logo"></div>
+
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logod.jpg" alt="Virtual Glow">
+                <span>Virtual Glow</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="instagram.html">Instagram</a></li>
+                <li><a href="tiktok.html">TikTok</a></li>
+                <li><a href="business.html" class="active">Business</a></li>
+            </ul>
+            <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <span class="hero-badge">💼 Business Solutions</span>
+        <h1>Estrategias para <span>Empresas</span></h1>
+        <p>Soluciones de contenido digital para emprendedores y negocios que quieren crecer en redes sociales con estrategias profesionales.</p>
+    </section>
+
+    <section class="section">
+        <!-- PLANES MENSUALES -->
+        <div class="section-header">
+            <span class="section-tag">Planes Mensuales</span>
+            <h2 class="section-title">Elige tu Plan Business</h2>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Business Starter</h3>
+                    <p class="pricing-desc">Para emprendedores iniciando su presencia digital</p>
+                </div>
+                <ul class="pricing-features">
+                    <li>Gestión de Instagram + Facebook</li>
+                    <li>12 piezas de contenido mensual (3/semana)</li>
+                    <li>Diseño de posts y stories</li>
+                    <li>Organización visual del feed</li>
+                    <li>10 sets de hashtags estratégicos</li>
+                    <li>Calendario editorial básico</li>
+                    <li>Reporte mensual de métricas</li>
+                    <li>Optimización de biografías</li>
+                </ul>
+                <div class="pricing-footer">
+                    <div class="pricing-price">$497<span>/mes</span></div>
+                    <p class="pricing-note">Incluye todo lo de Instagram Glow Mini</p>
+                    <a href="mailto:virtualglowservicesd@gmail.com?subject=Quiero%20Business%20Starter" class="btn-primary">Solicitar por Email</a>
+                </div>
+            </div>
+
+            <div class="pricing-card featured">
+                <div class="popular-badge">Más Popular</div>
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Business Growth</h3>
+                    <p class="pricing-desc">Para negocios listos para escalar resultados</p>
+                </div>
+                <ul class="pricing-features">
+                    <li>Gestión de 3 redes (IG + FB + TikTok)</li>
+                    <li>20 piezas de contenido mensual</li>
+                    <li>2 Reels/TikToks profesionales</li>
+                    <li>Flyers, menús y promociones</li>
+                    <li>Diseño de guías y PDFs visuales</li>
+                    <li>Brainstorming mensual de ideas</li>
+                    <li>Análisis de 3 competidores</li>
+                    <li>Calendario editorial completo</li>
+                    <li>Reporte mensual detallado</li>
+                    <li>1 reunión de seguimiento mensual</li>
+                </ul>
+                <div class="pricing-footer">
+                    <div class="pricing-price">$997<span>/mes</span></div>
+                    <p class="pricing-note">Incluye Instagram Glow Plus + TikTok Mini</p>
+                    <a href="mailto:virtualglowservicesd@gmail.com?subject=Quiero%20Business%20Growth" class="btn-primary">Solicitar por Email</a>
+                </div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Business Premium</h3>
+                    <p class="pricing-desc">Para empresas que quieren dominio total</p>
+                </div>
+                <ul class="pricing-features">
+                    <li>Gestión de 4+ redes sociales</li>
+                    <li>30 piezas de contenido mensual</li>
+                    <li>4 Reels/TikToks profesionales</li>
+                    <li>Edición de video avanzada</li>
+                    <li>Respuesta a mensajes y comentarios</li>
+                    <li>Plantillas Canva personalizadas</li>
+                    <li>Campañas de sorteos/colaboraciones</li>
+                    <li>Estrategia de contenido mensual</li>
+                    <li>Reporte ejecutivo + call 30min</li>
+                    <li>Revisión ilimitada de contenido</li>
+                    <li>Prioridad en entregas</li>
+                </ul>
+                <div class="pricing-footer">
+                    <div class="pricing-price">$1,497<span>/mes</span></div>
+                    <p class="pricing-note">Incluye Instagram Glow Full + TikTok Plus</p>
+                    <a href="mailto:virtualglowservicesd@gmail.com?subject=Quiero%20Business%20Premium" class="btn-primary">Solicitar por Email</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SERVICIOS INDIVIDUALES -->
+        <div class="section-header">
+            <span class="section-tag">Servicios por Proyecto</span>
+            <h2 class="section-title">Soluciones Específicas</h2>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🔍</div>
+                <h3 class="service-name">Auditoría de Redes Sociales</h3>
+                <p class="service-desc">Análisis profundo de tus perfiles actuales, competencia y oportunidades de mejora. Incluye plan de acción detallado.</p>
+                <div class="service-price">$297 <span>(único)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <h3 class="service-name">Estrategia de Marca Digital</h3>
+                <p class="service-desc">Definición de identidad de marca, posicionamiento, manual de marca para redes, propuesta de valor y voice & tone guide.</p>
+                <div class="service-price">$797 <span>(único)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">⚙️</div>
+                <h3 class="service-name">Setup Profesional de Perfiles</h3>
+                <p class="service-desc">Optimización completa de biografías, fotos de perfil, highlights organizados, link en bio optimizado y configuración profesional.</p>
+                <div class="service-price">$197 <span>(por red)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📅</div>
+                <h3 class="service-name">Calendario de Contenido 30 días</h3>
+                <p class="service-desc">Planificación completa con ideas de posts, captions, hashtags, mejores horarios y estrategia de publicación.</p>
+                <div class="service-price">$397 <span>(único)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3 class="service-name">Pack de Flyers/Menús Digitales</h3>
+                <p class="service-desc">Diseño de 5 flyers promocionales, menús digitales o promociones para redes sociales. Entrega en formatos editables.</p>
+                <div class="service-price">$247 <span>(pack 5 diseños)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎬</div>
+                <h3 class="service-name">Edición de Reels Profesional</h3>
+                <p class="service-desc">Edición profesional de reels/TikToks con música tendencia, subtítulos, efectos y optimización para viralización.</p>
+                <div class="service-price">$97 <span>(por video)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📐</div>
+                <h3 class="service-name">Plantillas Canva Personalizadas</h3>
+                <p class="service-desc">Pack de 10 templates editables para posts y stories con la identidad visual de tu marca. Incluye tutorial de uso.</p>
+                <div class="service-price">$147 <span>(pack 10 templates)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📸</div>
+                <h3 class="service-name">Fotos de Producto Editadas</h3>
+                <p class="service-desc">Edición profesional de 10 fotos de producto con fondo limpio, color correction y optimización para redes sociales.</p>
+                <div class="service-price">$97 <span>(10 fotos)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3 class="service-name">Mini Web para Productos</h3>
+                <p class="service-desc">Página web simple tipo catálogo para mostrar productos/servicios con link desde Instagram (Linktree style mejorado).</p>
+                <div class="service-price">$197 <span>(único)</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📚</div>
+                <h3 class="service-name">Workshop para Equipos</h3>
+                <p class="service-desc">Capacitación de 2 horas para tu equipo sobre creación de contenido, herramientas (Canva) y mejores prácticas.</p>
+                <div class="service-price">$497 <span>(por sesión)</span></div>
+            </div>
+        </div>
+
+        <!-- CONSULTORÍA 1:1 -->
+        <div class="consulting-section">
+            <div class="consulting-content">
+                <h3>Consultoría Estratégica 1:1</h3>
+                <p>Sesiones personalizadas para dueños de negocio que necesitan dirección experta sin contrato de agencia completo.</p>
+                <p>Ideal para empresas establecidas que necesitan un plan de acción claro o están en punto de inflexión.</p>
+                
+                <ul class="consulting-list">
+                    <li>Sesión diagnóstico de 90 minutos (video call)</li>
+                    <li>Análisis de perfiles y competencia</li>
+                    <li>Plan de acción personalizado entregable (PDF)</li>
+                    <li>2 sesiones de seguimiento (30 min cada una)</li>
+                    <li>Acceso directo por WhatsApp por 30 días</li>
+                    <li>Revisión de contenido y copy ilimitada</li>
+                    <li>Banco de ideas de contenido personalizado</li>
+                </ul>
+                
+                <a href="mailto:virtualglowservicesd@gmail.com?subject=Consultoria%201:1%20Premium" class="btn-secondary">Solicitar Consultoría por Email</a>
+            </div>
+            
+            <div class="consulting-visual">
+                <div class="consulting-icon">👩‍💼</div>
+                <div class="price-label">Inversión</div>
+                <div class="price-tag">$997</div>
+                <div class="price-note">o 2 pagos de $525</div>
+            </div>
+        </div>
+
+        <!-- PROCESO -->
+        <div class="process-section">
+            <div class="section-header">
+                <span class="section-tag">Proceso</span>
+                <h2 class="section-title">Cómo Trabajamos</h2>
+            </div>
+            
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Brief</h4>
+                    <p class="step-desc">Llenas un cuestionario sobre tu marca y objetivos</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Estrategia</h4>
+                    <p class="step-desc">Creamos tu plan de contenido personalizado</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Creación</h4>
+                    <p class="step-desc">Diseñamos y programamos tu contenido</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Resultados</h4>
+                    <p class="step-desc">Analizamos métricas y optimizamos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- INDUSTRIAS -->
+        <div class="industries-section">
+            <div class="section-header" style="margin-bottom: 2rem;">
+                <span class="section-tag">Especialidades</span>
+                <h2 class="section-title">Industrias que Servimos</h2>
+            </div>
+            <div class="industries-grid">
+                <div class="industry-item"><div class="industry-icon">💄</div><div>Belleza</div></div>
+                <div class="industry-item"><div class="industry-icon">👗</div><div>Moda</div></div>
+                <div class="industry-item"><div class="industry-icon">🍽️</div><div>Restaurantes</div></div>
+                <div class="industry-item"><div class="industry-icon">💪</div><div>Fitness</div></div>
+                <div class="industry-item"><div class="industry-icon">🏠</div><div>Real Estate</div></div>
+                <div class="industry-item"><div class="industry-icon">📚</div><div>Educación</div></div>
+                <div class="industry-item"><div class="industry-icon">⚖️</div><div>Servicios Profesionales</div></div>
+                <div class="industry-item"><div class="industry-icon">🛍️</div><div>E-commerce</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SIN LLAMADA, TODO POR EMAIL -->
+    <section class="cta-section">
+        <div>
+            <h2>¿Lista para escalar tu negocio?</h2>
+            <p style="color: #666; margin-bottom: 2rem;">Escríbenos y te respondemos en 24-48 horas con una propuesta personalizada.</p>
+            <a href="mailto:virtualglowservicesd@gmail.com?subject=Consulta%20Business%20-%20Quiero%20empezar" class="btn-large">Enviar Email de Consulta</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Virtual Glow. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 600);
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
