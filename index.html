@@ -345,7 +345,7 @@
           <span class="platform-arrow-vertical" data-i18n="platform.explore">Explorar →</span>
         </a>
         <a href="glowup.html" class="platform-card-vertical glowup" role="listitem" aria-label="Glow Up Academy - Nuevo">
-          <div class="badge-nuevo" aria-label="Nuevo">NEW · </div>
+          <div class="badge-nuevo" aria-label="Nuevo">NEW · NUEVO</div>
           <div class="platform-icon-vertical" aria-hidden="true">✨</div>
           <h2 class="platform-name-vertical" data-i18n="platform.glowup">Glow Up</h2>
           <p class="platform-desc-vertical" data-i18n="platform.glowupDesc">Acceso VIP para colaborar con marcas grandes sin miles de seguidores. Aprende a aplicar como creadora UGC desde cero.</p>
@@ -365,13 +365,13 @@
     <div class="reviews-inner">
       <div style="text-align:center; margin-bottom:2.5rem;">
         <span class="section-tag">Comunidad</span>
-        <h2 class="section-title" style="margin-bottom:0.4rem;"> Reseñas de nuestra comunidad</h2>
+        <h2 class="section-title" style="margin-bottom:0.4rem;">💬 Reseñas de nuestra comunidad</h2>
         <p style="color:#aaa; font-size:0.88rem;">Experiencias reales — visibles para todos</p>
       </div>
 
       <!-- FORM -->
       <div style="background:var(--white); border-radius:24px; padding:2.5rem; box-shadow:var(--shadow-soft); border:1px solid rgba(219,112,147,0.08); margin-bottom:2.5rem;">
-        <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--dark); margin-bottom:1.5rem; text-align:center;"> Deja tu reseña</h3>
+        <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--dark); margin-bottom:1.5rem; text-align:center;">✍️ Deja tu reseña</h3>
         <div class="review-name-grid">
           <input type="text" id="idxReviewName" placeholder="Tu nombre *" maxlength="40" class="review-input" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(219,112,147,0.2)'">
           <input type="text" id="idxReviewLocation" placeholder="País / Ciudad *" maxlength="40" class="review-input" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(219,112,147,0.2)'">
@@ -433,7 +433,7 @@
         <div class="contact-detail">
           <div class="contact-icon" aria-hidden="true">📧</div>
           <div class="contact-text">
-            <a href="mailto:virtualglowservicesd@gmail.com" aria-label="Enviar email a Virtual Glow">virtualglowservicesd@gmail.com</a>
+            <a href="/cdn-cgi/l/email-protection#314758434544505d565d5e4642544347585254425571565c50585d1f525e5c" aria-label="Enviar email a Virtual Glow"><span class="__cf_email__" data-cfemail="b9cfd0cbcdccd8d5ded5d6cecadccbcfd0dadccaddf9ded4d8d0d597dad6d4">[email&#160;protected]</span></a>
           </div>
         </div>
         <div class="contact-detail">
@@ -491,209 +491,22 @@
     <p data-i18n="footer">© 2025 Virtual Glow. Todos los derechos reservados.</p>
   </footer>
 
-  <script>
-    const testimonials = [
-      { name:'Claudia García', location:'Louisville, KY', rating:5, text:'Llevaba meses sin saber qué publicar. Con Virtual Glow mi perfil cambió completamente, las historias tienen respuestas reales y ya cerré 3 clientes nuevos este mes.', ts: 1700000004 },
-      { name:'Daniela Ríos', location:'Miami, FL', rating:5, text:'Honestamente no creía que funcionara tan rápido. En 6 semanas pasé de 800 a casi 9,000 seguidores y mis ventas de ropa subieron un chingo.', ts: 1700000003 },
-      { name:'Sofía Méndez', location:'Bogotá, Colombia', rating:5, text:'El servicio de TikTok fue una locura. El primer video que aplicamos la estrategia llegó a 400k views. Nunca me había pasado eso.', ts: 1700000002 },
-      { name:'Karla Vásquez', location:'Ciudad de México', rating:5, text:'Tenía un negocio de repostería pero nadie me veía en Instagram. Ahora tengo lista de espera. No exagero, eso pasó en menos de 2 meses.', ts: 1700000001 }
-    ];
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    let currentLang='es';
-
-    function renderTestimonials(){ /* merged into idxLoadReviews */ }
-
-    async function idxLoadReviews() {
-      const list = document.getElementById('idxReviewsList');
-      const empty = document.getElementById('idxReviewsEmpty');
-      // also clear the old grid
-      const oldGrid = document.getElementById('testimonialsGrid');
-      if (oldGrid) oldGrid.innerHTML = '';
-
-      try {
-        const result = await window.storage.list(IDX_KEY_PREFIX, true);
-        const keys = result?.keys || [];
-        const dynamic = [];
-        for (const key of keys) {
-          try {
-            const r = await window.storage.get(key, true);
-            if (r) {
-              const parsed = JSON.parse(r.value);
-              if (!parsed._deleted) dynamic.push(parsed);
-            }
-          } catch(e) {}
-        }
-        // merge with hardcoded, dynamic ones go on top (higher ts)
-        const all = [...dynamic, ...testimonials].sort((a, b) => b.ts - a.ts);
-        if (all.length === 0) { list.innerHTML = ''; empty.style.display = 'block'; return; }
-        empty.style.display = 'none';
-        list.innerHTML = all.map(r => `
-          <div style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:var(--shadow-soft);border:1px solid rgba(219,112,147,0.06);position:relative;overflow:hidden;">
-            <div style="position:absolute;top:-10px;left:15px;font-size:7rem;color:rgba(219,112,147,0.07);font-family:'Playfair Display',serif;line-height:1;">"</div>
-            <div style="color:#ffb800;font-size:0.95rem;margin-bottom:0.6rem;">${'★'.repeat(r.stars || r.rating)}${'☆'.repeat(5-(r.stars || r.rating))}</div>
-            <p style="color:#555;font-size:0.93rem;line-height:1.7;margin-bottom:1.2rem;position:relative;z-index:1;">${idxEscape(r.text)}</p>
-            <div style="display:flex;align-items:center;gap:0.8rem;">
-              <div style="width:38px;height:38px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;flex-shrink:0;">${idxEscape(r.name.charAt(0).toUpperCase())}</div>
-              <div>
-                <div style="font-weight:600;color:var(--dark);font-size:0.9rem;">${idxEscape(r.name)}</div>
-                <div style="color:#aaa;font-size:0.8rem;">${idxEscape(r.location)}</div>
-              </div>
-            </div>
-          </div>`).join('');
-      } catch(e) {
-        // storage not available, just show hardcoded
-        empty.style.display = 'none';
-        list.innerHTML = testimonials.map(r => `
-          <div style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:var(--shadow-soft);border:1px solid rgba(219,112,147,0.06);position:relative;overflow:hidden;">
-            <div style="position:absolute;top:-10px;left:15px;font-size:7rem;color:rgba(219,112,147,0.07);font-family:'Playfair Display',serif;line-height:1;">"</div>
-            <div style="color:#ffb800;font-size:0.95rem;margin-bottom:0.6rem;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-            <p style="color:#555;font-size:0.93rem;line-height:1.7;margin-bottom:1.2rem;position:relative;z-index:1;">${idxEscape(r.text)}</p>
-            <div style="display:flex;align-items:center;gap:0.8rem;">
-              <div style="width:38px;height:38px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;flex-shrink:0;">${idxEscape(r.name.charAt(0).toUpperCase())}</div>
-              <div>
-                <div style="font-weight:600;color:var(--dark);font-size:0.9rem;">${idxEscape(r.name)}</div>
-                <div style="color:#aaa;font-size:0.8rem;">${idxEscape(r.location)}</div>
-              </div>
-            </div>
-          </div>`).join('');
-      }
-    }
-
-    const knowledgeBase=[
-      {keywords:['hola','buenos','saludos','hey','hi'],response:'¡Hola! ✨ ¿En qué puedo ayudarte? Pregúntame sobre Instagram, TikTok, Business, Glow Up, precios o cómo empezar.'},
-      {keywords:['instagram','ig','feed'],response:'📸 Instagram:\n• Glow Mini: $250/mes (3 piezas/semana)\n• Glow Plus: $475/mes (4-5 piezas)\n• Glow Full: $800/mes (6-7 piezas + reel pro)\n\n¿Cuál te interesa?'},
-      {keywords:['tiktok','viral'],response:'🎵 TikTok (pago único):\n• Mini: $150 (12 ideas + 5 hooks)\n• Plus: $290 (calendario 14 días)\n• Full: $490 (30 días + soporte 7 días)\n\nClientes reportan 10M+ views.'},
-      {keywords:['business','negocio','consultoria'],response:'💼 Business:\n• Starter: $497/mes\n• Growth: $997/mes (más popular)\n• Premium: $1,497/mes\n• Consultoría 1:1: $997\n\n¿Qué necesitas?'},
-      {keywords:['glowup','glow up','imagen','branding'],response:'✨ Glow Up:\nTransformación total de imagen digital:\n• Branding personal profesional\n• Fotografía de contenido\n• Estética premium\n• Feed makeover completo\n\nDesde $350. ¿Te interesa?'},
-      {keywords:['precio','costo','cuanto'],response:'💰 Precios:\nInstagram: $250-$800/mes\nTikTok: $150-$490 (único)\nBusiness: $497-$1,497/mes\nGlow Up: Desde $350\nConsultoría: $997\n\n¿Qué servicio te interesa?'},
-      {keywords:['contacto','email','escribir'],response:'📧 Escríbenos:\n• Email: virtualglowservicesd@gmail.com\n• Instagram: @virtual_glow_\n• TikTok: @virtual_glow_\n\nRespuesta en 24-48h.'},
-      {keywords:['empezar','comenzar','proceso'],response:'🚀 Para empezar:\n1. Escríbenos tu nombre y negocio\n2. Te enviamos un brief\n3. Propuesta en 24-48h\n4. ¡Empezamos!\n\n¿Listo?'}
-    ];
-
-    function findResponse(msg){
-      const lower=msg.toLowerCase();
-      for(const item of knowledgeBase){for(const k of item.keywords){if(lower.includes(k))return item.response;}}
-      return 'Pregúntame sobre Instagram, TikTok, Business, Glow Up, precios o cómo empezar. También puedes escribirnos a virtualglowservicesd@gmail.com ✨';
-    }
-
-    const chatContainer=document.getElementById('chatContainer');
-    const chatMessages=document.getElementById('chatMessages');
-    const chatInput=document.getElementById('chatInput');
-    const quickQuestions=document.getElementById('quickQuestions');
-
-    const quickQs=[
-      {es:'¿Cómo empiezo?',en:'How to start?'},
-      {es:'Precios Instagram',en:'Instagram prices'},
-      {es:'TikTok packs',en:'TikTok packs'},
-      {es:'Glow Up',en:'Glow Up'},
-      {es:'Consultoría Business',en:'Business consulting'},
-      {es:'Contacto',en:'Contact'}
-    ];
-
-    function addMessage(text,sender){
-      const msg=document.createElement('div');
-      msg.className=`message ${sender}`;
-      msg.textContent=text;
-      chatMessages.appendChild(msg);
-      chatMessages.scrollTop=chatMessages.scrollHeight;
-    }
-
-    function handleSend(){
-      const text=chatInput.value.trim();
-      if(!text)return;
-      addMessage(text,'user');
-      chatInput.value='';
-      setTimeout(()=>addMessage(findResponse(text),'bot'),300);
-    }
-
-    function renderQuickQs(){
-      quickQuestions.innerHTML='';
-      quickQs.forEach(q=>{
-        const btn=document.createElement('span');
-        btn.className='quick-question';
-        btn.textContent=currentLang==='es'?q.es:q.en;
-        btn.setAttribute('role','button');
-        btn.setAttribute('tabindex','0');
-        btn.onclick=()=>{addMessage(btn.textContent,'user');setTimeout(()=>addMessage(findResponse(btn.textContent),'bot'),300);};
-        quickQuestions.appendChild(btn);
-      });
-    }
-
-    document.getElementById('sendChat').onclick=handleSend;
-    chatInput.onkeypress=(e)=>{if(e.key==='Enter')handleSend();};
-    document.getElementById('closeChat').onclick=()=>{chatContainer.classList.remove('active','fullscreen');};
-    document.getElementById('toggleChatFull').onclick=()=>{chatContainer.classList.toggle('fullscreen');};
-    document.getElementById('openChatMenu').onclick=(e)=>{
-      e.preventDefault();chatContainer.classList.add('active');
-      document.getElementById('navLinks').classList.remove('active');
-      document.getElementById('menuToggle').classList.remove('active');
-      chatInput.focus();
+    const firebaseConfig = {
+      apiKey: "AIzaSyACwlc-rvSnvVur5RPQFTEv0oEob0YnCpM",
+      authDomain: "virtualglow-6f43d.firebaseapp.com",
+      projectId: "virtualglow-6f43d",
+      storageBucket: "virtualglow-6f43d.firebasestorage.app",
+      messagingSenderId: "495049858839",
+      appId: "1:495049858839:web:d1e4d4cc3ca68dbe406152"
     };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    const translations={
-      es:{'nav.home':'Inicio','nav.instagram':'Instagram','nav.tiktok':'TikTok','nav.business':'Business','nav.glowup':'Glow Up','nav.testimonials':'Testimonios','nav.contact':'Contacto','nav.assistant':'Asistente Glow','hero.title':'Virtual Glow','hero.subtitle':'Transformamos tu presencia digital en algo <span>brillante</span>. Elige tu plataforma y comienza a brillar con estrategias que convierten.','platform.ig':'Instagram','platform.igDesc':'Construimos un Instagram que proyecta nivel. Reels con intención, historias que activan y un feed que construye autoridad.','platform.tt':'TikTok','platform.ttDesc':'Contenido viral, tendencias adaptadas y estrategias de crecimiento acelerado. Conquista el algoritmo.','platform.biz':'Business','platform.bizDesc':'Digitalizamos y optimizamos tu presencia para escalar. Menos improvisación. Más sistema. Más crecimiento.','platform.glowup':'Glow Up','platform.glowupDesc':'Acceso VIP para colaborar con marcas grandes sin miles de seguidores. Aprende a aplicar como creadora UGC desde cero.','platform.explore':'Explorar →','testimonials.badge':'Testimonios','testimonials.title':'Lo que dicen nuestros clientes','contact.title':'Contacto','contact.office':'Disponible 24/7 online','contact.privacy':'Políticas de privacidad','contact.terms':'Términos de uso','privacy.title':'Políticas de Privacidad','privacy.text':'En Virtual Glow, nos tomamos muy en serio la privacidad de tus datos. Toda la información que nos proporcionas se utiliza únicamente para mejorar nuestros servicios y comunicarnos contigo. No compartimos tus datos con terceros sin tu consentimiento explícito.','terms.title':'Términos de Uso','terms.text':'Al utilizar nuestros servicios, aceptas los siguientes términos: Los pagos se procesan a través de Stripe. No realizamos reembolsos después de los primeros 7 días de cada mes. El contenido creado es propiedad de Virtual Glow hasta el pago completo.','footer':'© 2025 Virtual Glow. Todos los derechos reservados.'},
-      en:{'nav.home':'Home','nav.instagram':'Instagram','nav.tiktok':'TikTok','nav.business':'Business','nav.glowup':'Glow Up','nav.testimonials':'Testimonials','nav.contact':'Contact','nav.assistant':'Glow Assistant','hero.title':'Virtual Glow','hero.subtitle':'We transform your digital presence into something <span>brilliant</span>. Choose your platform and start shining with strategies that convert.','platform.ig':'Instagram','platform.igDesc':'We build an Instagram that projects level. Reels with intention, stories that activate and a feed that builds authority.','platform.tt':'TikTok','platform.ttDesc':'Viral content, adapted trends, and accelerated growth strategies. Conquer the algorithm.','platform.biz':'Business','platform.bizDesc':'We digitize and optimize your presence to scale. Less improvisation. More system. More growth.','platform.glowup':'Glow Up','platform.glowupDesc':'VIP access to collaborate with major brands without thousands of followers. Learn to apply as a UGC creator from scratch.','platform.explore':'Explore →','testimonials.badge':'Testimonials','testimonials.title':'What our clients say','contact.title':'Contact','contact.office':'Available 24/7 online','contact.privacy':'Privacy Policy','contact.terms':'Terms of use','privacy.title':'Privacy Policy','privacy.text':'At Virtual Glow, we take your privacy seriously. All information you provide is used solely to improve our services and communicate with you. We do not share your data with third parties without your explicit consent.','terms.title':'Terms of Use','terms.text':'By using our services, you agree to the following terms: Payments are processed through Stripe. No refunds after the first 7 days of each month. Created content remains property of Virtual Glow until full payment is received.','footer':'© 2025 Virtual Glow. All rights reserved.'}
-    };
-
-    function translatePage(){
-      document.querySelectorAll('[data-i18n]').forEach(el=>{
-        const key=el.getAttribute('data-i18n');
-        const val=translations[currentLang][key];
-        if(val){if(val.includes('<')&&val.includes('>'))el.innerHTML=val;else el.textContent=val;}
-      });
-      renderTestimonials();renderQuickQs();
-    }
-
-    document.querySelectorAll('.lang-btn').forEach(btn=>{
-      btn.onclick=()=>{
-        document.querySelectorAll('.lang-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});
-        btn.classList.add('active');btn.setAttribute('aria-pressed','true');
-        currentLang=btn.dataset.lang;translatePage();
-      };
-    });
-
-    document.querySelectorAll('[data-section]').forEach(el=>{
-      el.onclick=(e)=>{
-        e.preventDefault();
-        const target=document.getElementById(el.dataset.section);
-        if(target)target.scrollIntoView({behavior:'smooth'});
-        document.getElementById('navLinks').classList.remove('active');
-        document.getElementById('menuToggle').classList.remove('active');
-        document.getElementById('menuToggle').setAttribute('aria-expanded','false');
-      };
-    });
-
-    document.getElementById('privacyPolicy').onclick=(e)=>{e.preventDefault();document.getElementById('privacyModal').classList.add('active');};
-    document.getElementById('termsOfUse').onclick=(e)=>{e.preventDefault();document.getElementById('termsModal').classList.add('active');};
-    document.getElementById('closePrivacy').onclick=()=>document.getElementById('privacyModal').classList.remove('active');
-    document.getElementById('closeTerms').onclick=()=>document.getElementById('termsModal').classList.remove('active');
-
-    document.getElementById('menuToggle').onclick=function(){
-      const expanded=this.getAttribute('aria-expanded')==='true';
-      this.classList.toggle('active');
-      this.setAttribute('aria-expanded',String(!expanded));
-      document.getElementById('navLinks').classList.toggle('active');
-    };
-
-    window.onscroll=()=>{
-      const nav=document.getElementById('nav');
-      if(window.scrollY>50)nav.classList.add('scrolled');else nav.classList.remove('scrolled');
-    };
-
-    window.onload=()=>{
-      setTimeout(()=>document.getElementById('loader').classList.add('hidden'),600);
-      document.querySelectorAll('.platform-card-vertical').forEach((el,i)=>{
-        setTimeout(()=>el.classList.add('visible'),i*200);
-      });
-      renderTestimonials();renderQuickQs();
-      idxLoadReviews();
-    };
-
-    const IDX_KEY_PREFIX = 'review:';
-    const IDX_ADMIN_KEY = '120520';
-    const idxStarLabels = ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
-    let idxSelectedStars = 0;
-
+    // ── HARDCODED REVIEWS (always show) ──
     const hardcodedReviews = [
       { name:'Claudia García', location:'Louisville, KY', stars:5, text:'Llevaba meses sin saber qué publicar. Con Virtual Glow mi perfil cambió completamente, las historias tienen respuestas reales y ya cerré 3 clientes nuevos este mes.', ts:4 },
       { name:'Daniela Ríos', location:'Miami, FL', stars:5, text:'Honestamente no creía que funcionara tan rápido. En 6 semanas pasé de 800 a casi 9,000 seguidores y mis ventas de ropa subieron un chingo.', ts:3 },
@@ -701,145 +514,75 @@
       { name:'Karla Vásquez', location:'Ciudad de México', stars:5, text:'Tenía un negocio de repostería pero nadie me veía en Instagram. Ahora tengo lista de espera. No exagero, eso pasó en menos de 2 meses.', ts:1 }
     ];
 
-    function idxReviewCard(r) {
+    function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    function makeCard(r) {
       return `<div style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:var(--shadow-soft);border:1px solid rgba(219,112,147,0.06);position:relative;overflow:hidden;">
         <div style="position:absolute;top:-10px;left:15px;font-size:7rem;color:rgba(219,112,147,0.07);font-family:'Playfair Display',serif;line-height:1;">"</div>
         <div style="color:#ffb800;font-size:0.95rem;margin-bottom:0.6rem;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
-        <p style="color:#555;font-size:0.93rem;line-height:1.7;margin-bottom:1.2rem;position:relative;z-index:1;">${idxEscape(r.text)}</p>
+        <p style="color:#555;font-size:0.93rem;line-height:1.7;margin-bottom:1.2rem;position:relative;z-index:1;">${esc(r.text)}</p>
         <div style="display:flex;align-items:center;gap:0.8rem;">
-          <div style="width:38px;height:38px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;flex-shrink:0;">${idxEscape(r.name.charAt(0).toUpperCase())}</div>
+          <div style="width:38px;height:38px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;flex-shrink:0;">${esc(r.name.charAt(0).toUpperCase())}</div>
           <div>
-            <div style="font-weight:600;color:var(--dark);font-size:0.9rem;">${idxEscape(r.name)}</div>
-            <div style="color:#aaa;font-size:0.8rem;">${idxEscape(r.location)}</div>
+            <div style="font-weight:600;color:var(--dark);font-size:0.9rem;">${esc(r.name)}</div>
+            <div style="color:#aaa;font-size:0.8rem;">${esc(r.location)}</div>
           </div>
         </div>
       </div>`;
     }
 
-    document.querySelectorAll('.idx-star-btn').forEach(star => {
-      star.addEventListener('mouseover', () => idxHighlightStars(+star.dataset.val));
-      star.addEventListener('mouseout', () => idxHighlightStars(idxSelectedStars));
-      star.addEventListener('click', () => {
-        idxSelectedStars = +star.dataset.val;
-        idxHighlightStars(idxSelectedStars);
-        document.getElementById('idxStarLabel').textContent = idxStarLabels[idxSelectedStars];
-      });
-    });
-
-    function idxHighlightStars(n) {
-      document.querySelectorAll('.idx-star-btn').forEach(s => {
-        s.style.color = +s.dataset.val <= n ? '#ffb800' : '#ddd';
-      });
-    }
-
-    function idxEscape(str) {
-      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    async function idxLoadReviews() {
+    async function loadReviews() {
       const list = document.getElementById('idxReviewsList');
-      const empty = document.getElementById('idxReviewsEmpty');
-      empty.style.display = 'none';
+      document.getElementById('idxReviewsEmpty').style.display = 'none';
       let dynamic = [];
       try {
-        const result = await window.storage.list(IDX_KEY_PREFIX, true);
-        const keys = result?.keys || [];
-        for (const key of keys) {
-          try {
-            const r = await window.storage.get(key, true);
-            if (r) {
-              const parsed = JSON.parse(r.value);
-              if (!parsed._deleted) dynamic.push(parsed);
-            }
-          } catch(e) {}
-        }
-      } catch(e) { /* storage unavailable, just show hardcoded */ }
-      // dynamic reviews on top (high ts), hardcoded always at bottom
-      const all = [...dynamic.sort((a,b) => b.ts - a.ts), ...hardcodedReviews];
-      list.innerHTML = all.map(r => idxReviewCard(r)).join('');
+        const snap = await getDocs(query(collection(db, 'reviews'), orderBy('ts','desc')));
+        snap.forEach(d => { const r = d.data(); if (!r._deleted) dynamic.push({id:d.id,...r}); });
+      } catch(e) {}
+      list.innerHTML = [...dynamic, ...hardcodedReviews].map(r => makeCard(r)).join('');
     }
 
-    async function idxSubmitReview() {
+    window.idxSubmitReview = async function() {
       const name = document.getElementById('idxReviewName').value.trim();
       const location = document.getElementById('idxReviewLocation').value.trim();
       const text = document.getElementById('idxReviewText').value.trim();
-      const errEl = document.getElementById('idxReviewError');
-      const successEl = document.getElementById('idxReviewSuccess');
-      errEl.style.display = 'none'; successEl.style.display = 'none';
-      if (!name) { errEl.textContent = '⚠️ Por favor ingresa tu nombre.'; errEl.style.display = 'block'; return; }
-      if (!location) { errEl.textContent = '⚠️ Por favor ingresa tu país o ciudad.'; errEl.style.display = 'block'; return; }
-      if (!idxSelectedStars) { errEl.textContent = '⚠️ Selecciona una calificación.'; errEl.style.display = 'block'; return; }
-      if (!text || text.length < 10) { errEl.textContent = '⚠️ Escribe al menos 10 caracteres.'; errEl.style.display = 'block'; return; }
-      const review = { name, location, stars: idxSelectedStars, text, ts: Date.now() };
-      const key = IDX_KEY_PREFIX + review.ts + ':' + Math.random().toString(36).slice(2,7);
+      const err = document.getElementById('idxReviewError');
+      const ok = document.getElementById('idxReviewSuccess');
+      err.style.display='none'; ok.style.display='none';
+      if (!name) { err.textContent='⚠️ Por favor ingresa tu nombre.'; err.style.display='block'; return; }
+      if (!location) { err.textContent='⚠️ Por favor ingresa tu país o ciudad.'; err.style.display='block'; return; }
+      if (!window._idxStars) { err.textContent='⚠️ Selecciona una calificación.'; err.style.display='block'; return; }
+      if (!text||text.length<10) { err.textContent='⚠️ Escribe al menos 10 caracteres.'; err.style.display='block'; return; }
       try {
-        await window.storage.set(key, JSON.stringify(review), true);
-        successEl.style.display = 'block';
-        document.getElementById('idxReviewName').value = '';
-        document.getElementById('idxReviewLocation').value = '';
-        document.getElementById('idxReviewText').value = '';
-        idxSelectedStars = 0; idxHighlightStars(0);
-        document.getElementById('idxStarLabel').textContent = '';
-        await idxLoadReviews();
-      } catch(e) {
-        errEl.textContent = '⚠️ Error al guardar: ' + (e.message || 'intenta de nuevo.');
-        errEl.style.display = 'block';
-      }
-    }
+        await addDoc(collection(db,'reviews'), {name, location, stars:window._idxStars, text, ts:Date.now(), _deleted:false});
+        ok.style.display='block';
+        document.getElementById('idxReviewName').value='';
+        document.getElementById('idxReviewLocation').value='';
+        document.getElementById('idxReviewText').value='';
+        window._idxStars=0;
+        document.querySelectorAll('.idx-star-btn').forEach(s=>s.style.color='#ddd');
+        document.getElementById('idxStarLabel').textContent='';
+        await loadReviews();
+      } catch(e) { err.textContent='⚠️ Error al guardar: '+(e.message||'intenta de nuevo.'); err.style.display='block'; }
+    };
 
-    // ── ADMIN ──
-    function idxOpenAdmin() {
-      document.getElementById('idxAdminModal').style.display = 'flex';
-      document.getElementById('idxAdminLogin').style.display = 'block';
-      document.getElementById('idxAdminManage').style.display = 'none';
-      document.getElementById('idxAdminKeyInput').value = '';
-      document.getElementById('idxAdminLoginError').style.display = 'none';
-      setTimeout(() => document.getElementById('idxAdminKeyInput').focus(), 100);
-    }
-
-    function idxCloseAdmin() { document.getElementById('idxAdminModal').style.display = 'none'; }
-
-    function idxVerifyAdmin() {
-      const key = document.getElementById('idxAdminKeyInput').value.trim();
-      if (key === IDX_ADMIN_KEY) {
-        document.getElementById('idxAdminLogin').style.display = 'none';
-        document.getElementById('idxAdminManage').style.display = 'block';
-        idxLoadAdminReviews();
-      } else {
-        document.getElementById('idxAdminLoginError').style.display = 'block';
-        document.getElementById('idxAdminKeyInput').value = '';
-        document.getElementById('idxAdminKeyInput').focus();
-      }
-    }
-
-    async function idxLoadAdminReviews() {
-      const container = document.getElementById('idxAdminList');
-      const emptyMsg = document.getElementById('idxAdminEmpty');
-      container.innerHTML = '<p style="text-align:center;color:#aaa;font-size:0.9rem;">Cargando...</p>';
-      emptyMsg.style.display = 'none';
+    window._idxLoadAdmin = async function() {
+      const c = document.getElementById('idxAdminList');
+      const em = document.getElementById('idxAdminEmpty');
+      c.innerHTML='<p style="text-align:center;color:#aaa;">Cargando...</p>'; em.style.display='none';
       try {
-        const result = await window.storage.list(IDX_KEY_PREFIX, true);
-        const keys = result?.keys || [];
+        const snap = await getDocs(query(collection(db,'reviews'), orderBy('ts','desc')));
         const reviews = [];
-        for (const key of keys) {
-          try {
-            const r = await window.storage.get(key, true);
-            if (r) {
-              const parsed = JSON.parse(r.value);
-              if (!parsed._deleted) reviews.push({ key, data: parsed });
-            }
-          } catch(e) {}
-        }
-        if (reviews.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; return; }
-        reviews.sort((a, b) => b.data.ts - a.data.ts);
-        window._idxAdminKeys = reviews.map(r => r.key);
-        container.innerHTML = reviews.map(({ data: r }, i) => `
+        snap.forEach(d => { const r=d.data(); if(!r._deleted) reviews.push({id:d.id,...r}); });
+        if (!reviews.length) { c.innerHTML=''; em.style.display='block'; return; }
+        window._idxAdminIds = reviews.map(r=>r.id);
+        c.innerHTML = reviews.map((r,i) => `
           <div id="idxcard-${i}" style="background:#f9f9fc;border-radius:14px;padding:1.2rem 1.4rem;margin-bottom:0.9rem;border:1px solid rgba(219,112,147,0.1);">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
               <div style="flex:1;min-width:0;">
-                <div style="font-weight:600;color:var(--dark);font-size:0.92rem;margin-bottom:0.2rem;">${idxEscape(r.name)} · ${idxEscape(r.location)}</div>
-                <div style="color:#ffb800;font-size:0.85rem;margin-bottom:0.3rem;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
-                <div style="color:#777;font-size:0.88rem;line-height:1.5;word-break:break-word;">${idxEscape(r.text)}</div>
+                <div style="font-weight:600;color:var(--dark);font-size:0.92rem;">${esc(r.name)} · ${esc(r.location)}</div>
+                <div style="color:#ffb800;font-size:0.85rem;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+                <div style="color:#777;font-size:0.88rem;word-break:break-word;">${esc(r.text)}</div>
               </div>
               <button onclick="idxConfirmDelete(${i})" id="idxdelbtn-${i}" style="background:#ffe5e5;color:#e74c3c;border:none;border-radius:8px;padding:0.45rem 0.8rem;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">🗑 Eliminar</button>
             </div>
@@ -851,34 +594,109 @@
               </div>
             </div>
           </div>`).join('');
-      } catch(e) {
-        container.innerHTML = '<p style="text-align:center;color:#e74c3c;">Error al cargar.</p>';
-      }
-    }
+      } catch(e) { c.innerHTML='<p style="text-align:center;color:#e74c3c;">Error al cargar.</p>'; }
+    };
 
-    function idxConfirmDelete(i) {
-      document.getElementById('idxconfirm-' + i).style.display = 'flex';
-      document.getElementById('idxdelbtn-' + i).style.display = 'none';
-    }
-    function idxCancelDelete(i) {
-      document.getElementById('idxconfirm-' + i).style.display = 'none';
-      document.getElementById('idxdelbtn-' + i).style.display = 'block';
-    }
-    async function idxDoDelete(i) {
-      const key = window._idxAdminKeys[i];
-      if (!key) return;
-      try {
-        await window.storage.set(key, JSON.stringify({ _deleted: true, ts: 0 }), true);
-        await idxLoadAdminReviews();
-        await idxLoadReviews();
-      } catch(e) {
-        alert('Error: ' + (e.message || e));
-      }
-    }
+    window.idxDoDelete = async function(i) {
+      const id = window._idxAdminIds[i]; if (!id) return;
+      try { await updateDoc(doc(db,'reviews',id),{_deleted:true}); await window._idxLoadAdmin(); await loadReviews(); }
+      catch(e) { alert('Error: '+e.message); }
+    };
 
-    document.getElementById('idxAdminModal').addEventListener('click', function(e) {
-      if (e.target === this) idxCloseAdmin();
+    loadReviews();
+
+    // ── STARS ──
+    window._idxStars = 0;
+    const starLabels = ['','Malo','Regular','Bueno','Muy bueno','Excelente'];
+    document.querySelectorAll('.idx-star-btn').forEach(star => {
+      star.addEventListener('mouseover', () => hilite(+star.dataset.val));
+      star.addEventListener('mouseout', () => hilite(window._idxStars));
+      star.addEventListener('click', () => {
+        window._idxStars = +star.dataset.val; hilite(window._idxStars);
+        document.getElementById('idxStarLabel').textContent = starLabels[window._idxStars];
+      });
     });
+    function hilite(n) { document.querySelectorAll('.idx-star-btn').forEach(s => s.style.color = +s.dataset.val<=n?'#ffb800':'#ddd'); }
+
+    // ── ADMIN ──
+    window.idxOpenAdmin = function() {
+      document.getElementById('idxAdminModal').style.display='flex';
+      document.getElementById('idxAdminLogin').style.display='block';
+      document.getElementById('idxAdminManage').style.display='none';
+      document.getElementById('idxAdminKeyInput').value='';
+      document.getElementById('idxAdminLoginError').style.display='none';
+      setTimeout(()=>document.getElementById('idxAdminKeyInput').focus(),100);
+    };
+    window.idxCloseAdmin = function() { document.getElementById('idxAdminModal').style.display='none'; };
+    window.idxVerifyAdmin = function() {
+      const k = document.getElementById('idxAdminKeyInput').value.trim();
+      if (k==='120520') {
+        document.getElementById('idxAdminLogin').style.display='none';
+        document.getElementById('idxAdminManage').style.display='block';
+        window._idxLoadAdmin();
+      } else {
+        document.getElementById('idxAdminLoginError').style.display='block';
+        document.getElementById('idxAdminKeyInput').value='';
+        document.getElementById('idxAdminKeyInput').focus();
+      }
+    };
+    window.idxConfirmDelete = function(i) {
+      document.getElementById('idxconfirm-'+i).style.display='flex';
+      document.getElementById('idxdelbtn-'+i).style.display='none';
+    };
+    window.idxCancelDelete = function(i) {
+      document.getElementById('idxconfirm-'+i).style.display='none';
+      document.getElementById('idxdelbtn-'+i).style.display='block';
+    };
+    document.getElementById('idxAdminModal').addEventListener('click', function(e){ if(e.target===this) window.idxCloseAdmin(); });
+
+    // ── CHAT ──
+    const knowledgeBase=[
+      {keywords:['hola','buenos','saludos','hey','hi'],response:'¡Hola! ✨ ¿En qué puedo ayudarte? Pregúntame sobre Instagram, TikTok, Business, Glow Up, precios o cómo empezar.'},
+      {keywords:['instagram','ig','feed'],response:'📸 Instagram:\n• Glow Mini: $250/mes\n• Glow Plus: $475/mes\n• Glow Full: $800/mes\n\n¿Cuál te interesa?'},
+      {keywords:['tiktok','viral'],response:'🎵 TikTok (pago único):\n• Mini: $150\n• Plus: $290\n• Full: $490\n\nClientes reportan 10M+ views.'},
+      {keywords:['business','negocio','consultoria'],response:'💼 Business:\n• Starter: $497/mes\n• Growth: $997/mes\n• Premium: $1,497/mes\n\n¿Qué necesitas?'},
+      {keywords:['glowup','glow up'],response:'✨ Glow Up Academy: $39.99 USD. Colabora con marcas grandes sin miles de seguidores. ¿Te interesa?'},
+      {keywords:['precio','costo','cuanto'],response:'💰 Precios:\nInstagram: $250-$800/mes\nTikTok: $150-$490\nBusiness: $497-$1,497/mes\nGlow Up: $39.99 USD'},
+      {keywords:['contacto','email','escribir'],response:'📧 virtualglowservicesd@gmail.com\nInstagram: @virtual_glow_\nTikTok: @virtual_glow_'},
+      {keywords:['empezar','comenzar'],response:'🚀 Para empezar: escríbenos tu nombre y negocio a virtualglowservicesd@gmail.com ¡Respuesta en 24-48h!'}
+    ];
+    function findResponse(msg){ const l=msg.toLowerCase(); for(const i of knowledgeBase){for(const k of i.keywords){if(l.includes(k))return i.response;}} return 'Pregúntame sobre Instagram, TikTok, Business, Glow Up o precios ✨'; }
+
+    const chatContainer=document.getElementById('chatContainer');
+    const chatMessages=document.getElementById('chatMessages');
+    const chatInput=document.getElementById('chatInput');
+
+    function addMessage(text,sender){ const m=document.createElement('div'); m.className=`message ${sender}`; m.textContent=text; chatMessages.appendChild(m); chatMessages.scrollTop=chatMessages.scrollHeight; }
+    function handleSend(){ const t=chatInput.value.trim(); if(!t)return; addMessage(t,'user'); chatInput.value=''; setTimeout(()=>addMessage(findResponse(t),'bot'),300); }
+
+    document.getElementById('sendChat').onclick=handleSend;
+    chatInput.onkeypress=e=>{if(e.key==='Enter')handleSend();};
+    document.getElementById('closeChat').onclick=()=>chatContainer.classList.remove('active','fullscreen');
+    document.getElementById('toggleChatFull').onclick=()=>chatContainer.classList.toggle('fullscreen');
+    document.getElementById('openChatMenu').onclick=e=>{ e.preventDefault(); chatContainer.classList.add('active'); document.getElementById('navLinks').classList.remove('active'); chatInput.focus(); };
+
+    const quickQs=[{es:'¿Cómo empiezo?',en:'How to start?'},{es:'Precios Instagram',en:'Instagram prices'},{es:'TikTok packs',en:'TikTok packs'},{es:'Glow Up',en:'Glow Up'},{es:'Contacto',en:'Contact'}];
+    let currentLang='es';
+    function renderQuickQs(){ const q=document.getElementById('quickQuestions'); q.innerHTML=''; quickQs.forEach(i=>{ const b=document.createElement('span'); b.className='quick-question'; b.textContent=currentLang==='es'?i.es:i.en; b.onclick=()=>{addMessage(b.textContent,'user');setTimeout(()=>addMessage(findResponse(b.textContent),'bot'),300);}; q.appendChild(b); }); }
+
+    // ── TRANSLATIONS ──
+    const translations={
+      es:{'nav.home':'Inicio','nav.instagram':'Instagram','nav.tiktok':'TikTok','nav.business':'Business','nav.glowup':'Glow Up','nav.testimonials':'Testimonios','nav.contact':'Contacto','nav.assistant':'Asistente Glow','hero.title':'Virtual Glow','hero.subtitle':'Transformamos tu presencia digital en algo <span>brillante</span>. Elige tu plataforma y comienza a brillar con estrategias que convierten.','platform.ig':'Instagram','platform.igDesc':'Construimos un Instagram que proyecta nivel. Reels con intención, historias que activan y un feed que construye autoridad.','platform.tt':'TikTok','platform.ttDesc':'Contenido viral, tendencias adaptadas y estrategias de crecimiento acelerado. Conquista el algoritmo.','platform.biz':'Business','platform.bizDesc':'Digitalizamos y optimizamos tu presencia para escalar. Menos improvisación. Más sistema. Más crecimiento.','platform.glowup':'Glow Up','platform.glowupDesc':'Acceso VIP para colaborar con marcas grandes sin miles de seguidores. Aprende a aplicar como creadora UGC desde cero.','platform.explore':'Explorar →','testimonials.badge':'Testimonios','testimonials.title':'Lo que dicen nuestros clientes','contact.title':'Contacto','contact.office':'Disponible 24/7 online','contact.privacy':'Políticas de privacidad','contact.terms':'Términos de uso','privacy.title':'Políticas de Privacidad','privacy.text':'En Virtual Glow, nos tomamos muy en serio la privacidad de tus datos.','terms.title':'Términos de Uso','terms.text':'Al utilizar nuestros servicios, aceptas: Pagos vía Stripe. No reembolsos después de 7 días.','footer':'© 2025 Virtual Glow. Todos los derechos reservados.'},
+      en:{'nav.home':'Home','nav.instagram':'Instagram','nav.tiktok':'TikTok','nav.business':'Business','nav.glowup':'Glow Up','nav.testimonials':'Testimonials','nav.contact':'Contact','nav.assistant':'Glow Assistant','hero.title':'Virtual Glow','hero.subtitle':'We transform your digital presence into something <span>brilliant</span>. Choose your platform and start shining.','platform.ig':'Instagram','platform.igDesc':'We build an Instagram that projects authority. Reels with intention, stories that activate.','platform.tt':'TikTok','platform.ttDesc':'Viral content, adapted trends, accelerated growth. Conquer the algorithm.','platform.biz':'Business','platform.bizDesc':'We digitize and optimize your presence to scale. Less improvisation. More system.','platform.glowup':'Glow Up','platform.glowupDesc':'VIP access to collaborate with major brands without thousands of followers.','platform.explore':'Explore →','testimonials.badge':'Testimonials','testimonials.title':'What our clients say','contact.title':'Contact','contact.office':'Available 24/7 online','contact.privacy':'Privacy Policy','contact.terms':'Terms of use','privacy.title':'Privacy Policy','privacy.text':'At Virtual Glow, we take your privacy seriously.','terms.title':'Terms of Use','terms.text':'By using our services: Payments via Stripe. No refunds after 7 days.','footer':'© 2025 Virtual Glow. All rights reserved.'}
+    };
+    function renderTestimonials(){}
+    function translatePage(){ document.querySelectorAll('[data-i18n]').forEach(el=>{ const v=translations[currentLang][el.getAttribute('data-i18n')]; if(v){if(v.includes('<'))el.innerHTML=v;else el.textContent=v;} }); renderTestimonials(); renderQuickQs(); }
+
+    document.querySelectorAll('.lang-btn').forEach(btn=>{ btn.onclick=()=>{ document.querySelectorAll('.lang-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');}); btn.classList.add('active');btn.setAttribute('aria-pressed','true'); currentLang=btn.dataset.lang; translatePage(); }; });
+    document.querySelectorAll('[data-section]').forEach(el=>{ el.onclick=e=>{ e.preventDefault(); document.getElementById(el.dataset.section)?.scrollIntoView({behavior:'smooth'}); document.getElementById('navLinks').classList.remove('active'); document.getElementById('menuToggle').classList.remove('active'); document.getElementById('menuToggle').setAttribute('aria-expanded','false'); }; });
+    document.getElementById('privacyPolicy').onclick=e=>{e.preventDefault();document.getElementById('privacyModal').classList.add('active');};
+    document.getElementById('termsOfUse').onclick=e=>{e.preventDefault();document.getElementById('termsModal').classList.add('active');};
+    document.getElementById('closePrivacy').onclick=()=>document.getElementById('privacyModal').classList.remove('active');
+    document.getElementById('closeTerms').onclick=()=>document.getElementById('termsModal').classList.remove('active');
+    document.getElementById('menuToggle').onclick=function(){ const e=this.getAttribute('aria-expanded')==='true'; this.classList.toggle('active'); this.setAttribute('aria-expanded',String(!e)); document.getElementById('navLinks').classList.toggle('active'); };
+    window.onscroll=()=>{ const n=document.getElementById('nav'); if(window.scrollY>50)n.classList.add('scrolled');else n.classList.remove('scrolled'); };
+    window.onload=()=>{ setTimeout(()=>document.getElementById('loader').classList.add('hidden'),600); document.querySelectorAll('.platform-card-vertical').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*200)); renderTestimonials(); renderQuickQs(); };
   </script>
 </body>
 </html>
