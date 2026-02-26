@@ -151,7 +151,7 @@
     .platform-arrow-vertical{display:inline-flex;align-items:center;gap:.5rem;color:var(--primary);font-weight:600;font-size:1rem;transition:gap .3s}
     .platform-card-vertical:hover .platform-arrow-vertical{gap:1rem}
 
-    .badge-nuevo{
+    .badge-new{
       position:absolute;top:-12px;right:-12px;
       background:linear-gradient(135deg,#ff6b6b 0%,#ff8e8e 50%,#ffb6c1 100%);
       color:white;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:800;
@@ -165,7 +165,7 @@
       0%,100%{box-shadow:0 4px 15px rgba(255,107,107,.4),0 0 0 3px rgba(255,255,255,.8)}
       50%{box-shadow:0 8px 25px rgba(255,107,107,.6),0 0 0 3px rgba(255,255,255,.9),0 0 20px rgba(255,182,193,.8)}
     }
-    .badge-nuevo::before{content:'✨';margin-right:4px;font-size:.9rem}
+    .badge-new::before{content:'✨';margin-right:4px;font-size:.9rem}
 
     .testimonials-section{padding:4rem 5%}
     .section-tag{display:inline-block;padding:.3rem 1rem;background:rgba(219,112,147,.1);color:var(--primary);border-radius:30px;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
@@ -256,7 +256,7 @@
       .chat-container{width:90%;height:70vh;right:5%;bottom:10%}
       .social-links{flex-direction:column;align-items:center}
       .platform-name-vertical{font-size:1.5rem}
-      .badge-nuevo{top:-8px;right:-8px;font-size:.7rem;padding:.4rem .8rem}
+      .badge-new{top:-8px;right:-8px;font-size:.7rem;padding:.4rem .8rem}
     }
     
     html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
@@ -344,8 +344,8 @@
           <p class="platform-desc-vertical" data-i18n="platform.bizDesc">Digitalizamos y optimizamos tu presencia para escalar. Menos improvisación. Más sistema. Más crecimiento.</p>
           <span class="platform-arrow-vertical" data-i18n="platform.explore">Explorar →</span>
         </a>
-        <a href="glowup.html" class="platform-card-vertical glowup" role="listitem" aria-label="Glow Up Academy - Nuevo">
-          <div class="badge-nuevo" aria-label="Nuevo">NUEVO</div>
+        <a href="glowup.html" class="platform-card-vertical glowup" role="listitem" aria-label="Glow Up Academy - New">
+          <div class="badge-new" aria-label="New">NEW</div>
           <div class="platform-icon-vertical" aria-hidden="true">✨</div>
           <h2 class="platform-name-vertical" data-i18n="platform.glowup">Glow Up</h2>
           <p class="platform-desc-vertical" data-i18n="platform.glowupDesc">Transformación total de imagen digital. Branding personal, fotografía de contenido y estética premium para destacar.</p>
@@ -742,7 +742,7 @@
         document.getElementById('idxStarLabel').textContent = '';
         await idxLoadReviews();
       } catch(e) {
-        errEl.textContent = '⚠️ Error al publicar. Intenta de nuevo.'; errEl.style.display = 'block';
+        errEl.textContent = '⚠️ Error al publicar. Intenta de new.'; errEl.style.display = 'block';
       }
     }
 
